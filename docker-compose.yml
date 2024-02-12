@@ -1,0 +1,37 @@
+version: '3'
+
+volumes:
+  db_data:
+
+services:
+  db:
+    image: mariadb
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: app
+    ports:
+      - 33006:3306
+  
+  phpmyadmin:
+    image: phpmyadmin
+    ports:
+      - 8080:80
+    environment:
+      - PMA_ARBITRARY=1
+
+    
+  backend:
+    build: . 
+    image: php:8-apache
+    volumes:
+      - ./src:/var/www/html:z
+    ports:
+      - 8000:80
+    depends_on:
+      - db
+    environment:
+      - MYSQL_HOST=db
+      - MYSQL_PORT=3306
+      - MYSQL_USER=root
+      - MYSQL_PASSWORD=root
+      - MYSQL_DATABASE=prueba
