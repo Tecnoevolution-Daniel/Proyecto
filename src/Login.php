@@ -61,13 +61,13 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             //$_SESSION["autenticado"] = true;
             switch ($row['rol']) {
                 case 'cliente':
-                    header("Location: Clientes.html");
+                    header("Location: Clientes.php");
                     break;
                 case 'proveedor':
-                    header("Location: Proveedores.html");
+                    header("Location: Proveedores.php");
                     break;
                 case 'empleado':
-                    header("Location: Empleados.html");
+                    header("Location: Empleados.php");
                     break;
                 default:
                     // Si el rol no está reconocido, redirigir a una página de error o mostrar un mensaje de error
