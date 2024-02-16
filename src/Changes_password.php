@@ -1,3 +1,79 @@
+<?php
+// Incluir la clase PHPMailer
+use PHPMailer\PHPMailer\PHPMailer;
+use PHPMailer\PHPMailer\Exception;
+
+// Incluir el archivo de conexión a la base de datos
+include 'Connection.php';
+
+// Función para generar una contraseña segura
+function generarContrasenaSegura($longitud = 10) {
+    // Caracteres válidos para la contraseña
+    $caracteres = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
+    $longitudCaracteres = strlen($caracteres);
+    $contrasena = '';
+    for ($i = 0; $i < $longitud; $i++) {
+        $contrasena .= $caracteres[rand(0, $longitudCaracteres - 1)];
+    }
+    return $contrasena;
+}
+
+// Verificar si se ha enviado el formulario
+if ($_SERVER["REQUEST_METHOD"] == "POST") {
+    // Obtener el correo enviado por el formulario
+    $Correo = $_POST['correo'];
+
+    // Consultar la base de datos para verificar si el correo existe
+    $query = "SELECT * FROM usuarios WHERE correo = :correo";
+    $stmt = $pdo->prepare($query);
+    $stmt->execute(['correo' => $Correo]);
+
+    // Verificar si se encontró un usuario con el correo dado
+    if ($stmt->rowCount() > 0) {
+        $row = $stmt->fetch(PDO::FETCH_ASSOC);
+
+        // Generar una nueva contraseña segura
+        $nuevaContrasena = generarContrasenaSegura();
+
+        // Actualizar la contraseña en la base de datos
+        $updateQuery = "UPDATE usuarios SET contrasena = :contrasena WHERE correo = :correo";
+        $updateStmt = $pdo->prepare($updateQuery);
+        $updateStmt->execute(['contrasena' => password_hash($nuevaContrasena, PASSWORD_DEFAULT), 'correo' => $Correo]);
+
+        // Enviar el correo electrónico con la nueva contraseña utilizando PHPMailer
+        $mail = new PHPMailer(true); // Instancia de PHPMailer con manejo de excepciones activado
+        try {
+            // Configurar el servidor SMTP
+            $mail->isSMTP();
+            $mail->Host = 'tu_servidor_smtp';
+            $mail->SMTPAuth = true;
+            $mail->Username = 'tu_correo@example.com';
+            $mail->Password = 'tu_contraseña';
+            $mail->SMTPSecure = 'tls'; // Puede ser 'ssl' o 'tls'
+            $mail->Port = 587; // Puerto SMTP
+
+            // Configurar el remitente y el destinatario
+            $mail->setFrom('tu_correo@example.com', 'Nombre Remitente');
+            $mail->addAddress($Correo);
+
+            // Configurar el contenido del correo
+            $mail->isHTML(true);
+            $mail->Subject = 'Recuperación de contraseña';
+            $mail->Body = "Tu nueva contraseña es: $nuevaContrasena";
+
+            // Enviar el correo electrónico
+            $mail->send();
+            echo 'Se ha enviado un correo con la nueva contraseña.';
+        } catch (Exception $e) {
+            echo 'Error al enviar el correo: ' . $mail->ErrorInfo;
+        }
+    } else {
+        // No se encontró un usuario con ese correo
+        echo 'No se encontró un usuario con ese correo.';
+    }
+}
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -27,57 +103,5 @@
             </div>
         </div>
     </div>
-<?php
-// Este archivo procesará el formulario de recuperación de contraseña
-
-// Incluir la conexión a la base de datos
-include 'Connection.php';
-// Verificar si se ha enviado un formulario POST
-if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    // Obtener el correo electrónico enviado desde el formulario
-    $correo = $_POST["correo"];
-    
-    // Consulta para verificar si el correo existe en la base de datos
-    $sql = "SELECT * FROM usuarios WHERE correo = ?";
-    $stmt = $conn->prepare($sql);
-    $stmt->bind_param("s", $correo);
-    $stmt->execute();
-    $result = $stmt->get_result();
-
-    if ($result->num_rows > 0) {
-        // El correo existe en la base de datos, generar una nueva contraseña aleatoria
-        $nueva_contrasena = generateRandomString(10); // Función para generar una cadena aleatoria
-
-        // Actualizar la contraseña en la base de datos
-        $sql_update = "UPDATE usuarios SET contrasena = ? WHERE correo = ?";
-        $stmt_update = $conn->prepare($sql_update);
-        $stmt_update->bind_param(password_hash($nueva_contrasena, PASSWORD_DEFAULT), $correo);
-        if ($stmt_update->execute()) {
-            // Enviar la nueva contraseña por correo electrónico
-            $mensaje = "Su nueva contraseña es: " . $nueva_contrasena;
-            mail($correo, "Nueva contraseña", $mensaje);
-            // Redirigir al usuario a una página de confirmación
-            header("Location: Login.php");
-            exit();
-        } else {
-            echo "Error al actualizar la contraseña: " . $conn->error;
-        }
-    } else {
-        echo "No se encontró ningún usuario con ese correo electrónico.";
-    }
-
-    $conn->close();
-}
-
-// Función para generar una cadena aleatoria
-function generateRandomString($length = 10) {
-    $characters = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
-    $randomString = '';
-    for ($i = 0; $i < $length; $i++) {
-        $randomString .= $characters[rand(0, strlen($characters) - 1)];
-    }
-    return $randomString;
-}
-?>
 </body>
 </html>
