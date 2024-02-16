@@ -230,6 +230,16 @@
                 </div>
             </div>
             <div class="form-row">
+                <div class="form-group col-md-4">
+                    <label for="FondoPension"> Fondo de pensiones(AFP):</label>
+                    <input type="text" class="form-control" id="FondoPension" required>
+                </div>
+                <div class="form-group col-md-4">
+                    <label for="FondoCesantias">Fondo de cesantias:</label>
+                    <input type="email" class="form-control" id="FondoCesantias" required>
+                </div>
+            </div>
+            <div class="form-row">
                 <div class="form-group col-md-12">
                     <h5>Relación de Hijos y Personas a Cargo</h5>
                     <table class="table table-bordered">
