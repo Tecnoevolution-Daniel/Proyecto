@@ -79,17 +79,7 @@
             <div class="form-row">
                 <div class="form-group col-md-4">
                     <label for="fechaNacimientoDia">Fecha de Nacimiento:</label>
-                    <div class="form-row">
-                        <div class="col">
-                            <input type="text" class="form-control" placeholder="Día" id="fechaNacimientoDia" required>
-                        </div>
-                        <div class="col">
-                            <input type="text" class="form-control" placeholder="Mes" id="fechaNacimientoMes" required>
-                        </div>
-                        <div class="col">
-                            <input type="text" class="form-control" placeholder="Año" id="fechaNacimientoAnio" required>
-                        </div>
-                    </div>
+                    <input type="date" class="form-control" id="fechaNacimientoDia" required>
                 </div>
                 <div class="form-group col-md-4">
                     <label for="lugarNacimientoPais">Lugar de Nacimiento:</label>
@@ -99,12 +89,12 @@
                     <label for="lugarNacimientoCiudad">Ciudad:</label>
                     <input type="text" class="form-control" id="lugarNacimientoCiudad" required>
                 </div>
-                <div class="form-group col-md-4">
-                    <label for="lugarNacimientoDpto">Dpto:</label>
-                    <input type="text" class="form-control" id="lugarNacimientoDpto" required>
-                </div>
             </div>
             <div class="form-row">
+                <div class="form-group col-md-4">
+                    <label for="lugarNacimientoDpto">Departamento:</label>
+                    <input type="text" class="form-control" id="lugarNacimientoDpto" required>
+                </div>
                 <div class="form-group col-md-4">
                     <label for="direccionResidencia">Dirección de Residencia:</label>
                     <input type="text" class="form-control" id="direccionResidencia" required>
@@ -121,8 +111,6 @@
                     <label for="celular">Celular:</label>
                     <input type="text" class="form-control" id="celular" required>
                 </div>
-            </div>
-            <div class="form-row">
                 <div class="form-group col-md-4">
                     <label for="nivelEducativo">Nivel Educativo:</label>
                     <select id="nivelEducativo" class="form-control" required>
@@ -134,54 +122,58 @@
                         <option>Otro</option>
                     </select>
                 </div>
+            </div>
+            <div class="form-row">
                 <div class="form-group col-md-4">
                     <label for="profesional">Profesional:</label>
-                    <input type="text" class="form-control" id="profesional" required>
+                    <select id="profesional" class="form-control" required>
+                        <option selected disabled value="">Selecciona...</option>
+                        <option>Si</option>
+                        <option>No</option>
+                    </select>
                 </div>
                 <div class="form-group col-md-4">
                     <label for="titulo">Título:</label>
                     <input type="text" class="form-control" id="titulo" required>
-                </div>
-            </div>
-            <div class="form-row">
+                </div>          
                 <div class="form-group col-md-4">
                     <label for="institucionEducativa">Institución Educativa:</label>
                     <input type="text" class="form-control" id="institucionEducativa" required>
                 </div>
+            </div>
+            <div class="form-row">    
                 <div class="form-group col-md-4">
                     <label for="fechaGrado">Fecha de Grado:</label>
                     <input type="text" class="form-control" id="fechaGrado" required>
                 </div>
-            </div>
-            <div class="form-row">
                 <div class="form-group col-md-4">
-                    <label for="vehiculo">Vehículo:</label>
-                    <input type="text" class="form-control" id="vehiculo" required>
+                    <label for="vehiculo"> Cuenta con vehículo:</label>
+                    <select id="vehiculo" class="form-control" required>
+                        <option selected disabled value="">Selecciona...</option>
+                        <option>Si</option>
+                        <option>No</option>
+                    </select>
                 </div>
                 <div class="form-group col-md-4">
                     <label for="marca">Marca:</label>
                     <input type="text" class="form-control" id="marca" required>
                 </div>
+            </div>
+            <div class="form-row">    
                 <div class="form-group col-md-4">
                     <label for="modelo">Modelo:</label>
                     <input type="text" class="form-control" id="modelo" required>
-                </div>
-            </div>
-            <div class="form-row">
-                <div class="form-group col-md-4">
-                    <label for="anio">Año:</label>
-                    <input type="text" class="form-control" id="anio" required>
                 </div>
                 <div class="form-group col-md-4">
                     <label for="licenciaConduccion">Licencia de Conducción:</label>
                     <input type="text" class="form-control" id="licenciaConduccion" required>
                 </div>
+            </div>
+            <div class="form-row">
                 <div class="form-group col-md-4">
                     <label for="numeroLicencia">Número:</label>
                     <input type="text" class="form-control" id="numeroLicencia" required>
                 </div>
-            </div>
-            <div class="form-row">
                 <div class="form-group col-md-4">
                     <label for="categoriaLicencia">Categoría:</label>
                     <input type="text" class="form-control" id="categoriaLicencia" required>
@@ -211,12 +203,12 @@
                     <input type="text" class="form-control" id="grupoSanguineo" required>
                 </div>
                 <div class="form-group col-md-4">
-                    <label for="rh">RH:</label>
-                    <input type="text" class="form-control" id="rh" required>
-                </div>
-                <div class="form-group col-md-4">
                     <label for="tieneViviendaPropia">Tiene Vivienda Propia:</label>
-                    <input type="text" class="form-control" id="tieneViviendaPropia" required>
+                    <select id="tieneViviendaPropia" class="form-control" required>
+                        <option selected disabled value="">Selecciona...</option>
+                        <option>Si</option>
+                        <option>No</option>
+                    </select>
                 </div>
             </div>
             <div class="form-row">
@@ -228,15 +220,15 @@
                     <label for="correoElectronico">Correo Electrónico:</label>
                     <input type="email" class="form-control" id="correoElectronico" required>
                 </div>
+                <div class="form-group col-md-4">
+                    <label for="fondoPension"> Fondo de pensiones(AFP):</label>
+                    <input type="text" class="form-control" id="FondoPension" required>
+                </div>
             </div>
             <div class="form-row">
                 <div class="form-group col-md-4">
-                    <label for="FondoPension"> Fondo de pensiones(AFP):</label>
-                    <input type="text" class="form-control" id="FondoPension" required>
-                </div>
-                <div class="form-group col-md-4">
-                    <label for="FondoCesantias">Fondo de cesantias:</label>
-                    <input type="email" class="form-control" id="FondoCesantias" required>
+                    <label for="fondoCesantias">Fondo de cesantias:</label>
+                    <input type="text" class="form-control" id="FondoCesantias" required>
                 </div>
             </div>
             <div class="form-row">
@@ -256,7 +248,7 @@
                             <tr>
                                 <td><input type="text" class="form-control" required></td>
                                 <td><input type="text" class="form-control" required></td>
-                                <td><input type="text" class="form-control" required></td>
+                                <td><input type="date" class="form-control" required></td>
                                 <td><input type="text" class="form-control" required></td>
                                 <td><input type="text" class="form-control" required></td>
                             </tr>
@@ -297,11 +289,7 @@
             <div class="form-row">
                 <div class="form-group col-md-6">
                     <label for="fecha">Fecha:</label>
-                    <input type="text" class="form-control" id="fecha" required>
-                </div>
-                <div class="form-group col-md-6">
-                    <label for="firma">Firma:</label>
-                    <input type="text" class="form-control" id="firma" required>
+                    <input type="date" class="form-control" id="fecha" required>
                 </div>
             </div>
             <button type="submit" class="btn btn-primary">Enviar</button>

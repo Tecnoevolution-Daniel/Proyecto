@@ -1,225 +1,261 @@
-<?php
-include 'Connection.php';
-
-session_start();
-
-if (isset($_SESSION['booleano']) && $_SESSION['booleano'] === true) {
-
-    if (isset($_SESSION['rol']) && $_SESSION['rol'] === 'cliente') {
-
-?>
-
 <!DOCTYPE html>
 <html lang="es">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Información de la Empresa o Persona</title>
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.3.0/css/bootstrap.min.css" rel="stylesheet">
+    <title>Datos empleado</title>
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
 </head>
 <body>
-    <div class="container">
-        <div class="row justify-content-center">
-            <div class="col-md-6">
-                <div class="card">
+    <div class="container mt-5">
+        <form>
+            <legend>Datos del cliente</legend>
+            <div class="card">
                     <div class="card-header">
                         Información de la Empresa
                     </div>
                     <div class="card-body">
-                        <div class="mb-3">
-                            <label for="Tipo_Solicitud">Tipo de solicitud:</label>
-                            <select class="form-select" id="Tipo_Solicitud" name="Tipo_Solicitud" required>
-                                <option value="">Seleccione</option>
-                                <option value="Persona_Juridica">Persona jurídica</option>
-                                <option value="Persona_Natural">Persona natural</option>
-                            </select>
-                        </div>
-                        
-                        <div class="mb-3">
-                            <label for="Proceso">Proceso:</label>
-                            <select class="form-select" id="Proceso" name="Proceso" required>
-                                <option value="">Seleccione</option>
-                                <option value="Creacion">Creación</option>
-                                <option value="Actualizacion">Actualización</option>
-                            </select>
-                        </div>
-                        
-                        <div class="mb-3">
-                            <label for="Fecha">Fecha:</label>
-                            <div class="row">
-                                <div class="col">
-                                    <input type="text" class="form-select" id="Dia" name="Dia" placeholder="Día" required>
-                                </div>
-                                <div class="col">
-                                    <input type="text" class="form-select" id="Mes" name="Mes" placeholder="Mes" required>
-                                </div>
-                                <div class="col">
-                                    <input type="text" class="form-select" id="Año" name="Año" placeholder="Año" required>
-                                </div>
+                        <div class="form-row">
+                            <div class="form-group col-md-4">
+                                <label for="tipoSolicitud">Tipo de solicitud:</label>
+                                <select class="form-control" id="tipoSolicitud" name="tipoSolicitud" required>
+                                    <option value="">Seleccione</option>
+                                    <option value="personaJuridica">Persona jurídica</option>
+                                    <option value="personaNatural">Persona natural</option>
+                                </select>
+                            </div>                            
+                            <div class="form-group col-md-4">
+                                <label for="proceso">Proceso:</label>
+                                <select class="form-control" id="proceso" name="proceso" required>
+                                    <option value="">Seleccione</option>
+                                    <option value="Creacion">Creación</option>
+                                    <option value="Actualizacion">Actualización</option>
+                                </select>
+                            </div>
+                            <div class="form-group col-md-4">
+                                <label for="fecha">Fecha:</label>
+                                <input type="date" class="form-control" id="fecha" required>
                             </div>
                         </div>
                     </div>
-                </div>
-                
-                <div class="card mt-4">
+            </div>
+            <div class="card mt-4">
                     <div class="card-header">
                         Información Básica Persona Natural o Jurídica
                     </div>
                     <div class="card-body">
-                        <div class="mb-3">
-                            <label for="NombreRazonSocial">Nombre o Razón Social:</label>
-                            <input type="text" class="form-control" id="NombreRazonSocial" name="NombreRazonSocial" required>
+                        <div class="form-row">
+                            <div class="form-group col-md-4">
+                                <label for="nombreRazonSocial">Nombre o Razón Social:</label>
+                                <input type="text" class="form-control" id="nombreRazonSocial" name="nombreRazonSocial" required>
+                            </div>
+                            <div class="form-group col-md-4">
+                                <label for="nit">NIT:</label>
+                                <input type="text" class="form-control" id="nit" name="nit" required>
+                            </div>
+                            <div class="form-group col-md-4">
+                                <label for="tipoSociedad">Tipo de Sociedad:</label>
+                                <select class="form-control" id="tipoSociedad" name="tipoSociedad" required>
+                                    <option value="">Seleccione</option>
+                                    <option value="unipersonal">Unipersonal</option>
+                                    <option value="limitada">Limitada</option>
+                                    <option value="colectiva">Colectiva</option>
+                                    <option value="economía_Mixta">Economía Mixta</option>
+                                    <option value="enComandita">En Comandita</option>
+                                    <option value="anónima">Anónima</option>
+                                    <option value="sas">SAS</option>
+                                    <option value="fideicomisos">Fideicomisos</option>
+                                </select>
+                            </div>
                         </div>
-                        <div class="mb-3">
-                            <label for="NIT">NIT:</label>
-                            <input type="text" class="form-control" id="NIT" name="NIT" required>
+
+                        <div class="form-row">
+                            <div class="form-group col-md-4">
+                                <label for="tipoEmpresa">Tipo de Empresa:</label>
+                                <select class="form-control" id="tipoEmpresa" name="tipoEmpresa" required>
+                                    <option value="">Seleccione</option>
+                                    <option value="privada">Privada</option>
+                                    <option value="pública">Pública</option>
+                                    <option value="mixta">Mixta</option>
+                                    <option value="entidadSinAnimoLucro">Entidad Sin Ánimo de Lucro</option>
+                                </select>
+                            </div>
+                            <div class="form-group col-md-4">
+                                <label for="tamañoEmpresa">Tamaño:</label>
+                                <select class="form-control" id="tamañoEmpresa" name="tamañoEmpresa" required>
+                                    <option value="">Seleccione</option>
+                                    <option value="microempresa">Microempresa</option>
+                                    <option value="pequeña">Pequeña</option>
+                                    <option value="mediana">Mediana</option>
+                                    <option value="grande">Grande</option>
+                                </select>
+                            </div>
+                            <div class="form-group col-md-4">
+                                <label for="fechaInicio">Fecha de inicio de actividades o constitucion(PJ):</label>
+                                <input type="date" class="form-control" id="fechaInicio" name="fechaInicio" required>
+                            </div>
                         </div>
-                        <div class="mb-3">
-                            <label for="TipoSociedad">Tipo de Sociedad:</label>
-                            <select class="form-control" id="TipoSociedad" name="TipoSociedad" required>
-                                <option value="">Seleccione</option>
-                                <option value="Unipersonal">Unipersonal</option>
-                                <option value="Limitada">Limitada</option>
-                                <option value="Colectiva">Colectiva</option>
-                                <option value="Economía_Mixta">Economía Mixta</option>
-                                <option value="En_Comandita">En Comandita</option>
-                                <option value="Anónima">Anónima</option>
-                                <option value="SAS">SAS</option>
-                                <option value="Fideicomisos">Fideicomisos</option>
-                            </select>
+
+                        <div class="form-row">
+                            <div class="form-group col-md-4">
+                                <label for="experiencia">Experiencia en el mercado (Años)(PN,PJ):</label>
+                                <input type="text" class="form-control" id="experiencia" name="experiencia" required>
+                            </div>
+                            <div class="form-group col-md-4">
+                                <label for="personaContacto"> Nombre persona contacto (PN o PJ):</label>
+                                <input type="text" class="form-control" id="personaContacto" name="personaContacto" required>
+                            </div>
+                            <div class="form-group col-md-4">
+                                <label for="ocupacionContacto"> Ocupacion de la persona de contacto (PN o PJ)</label>
+                                <input type="text" class="form-control" id="ocupacionContacto" name="ocupacionContacto" required>
+                            </div>
+
                         </div>
-                        <div class="mb-3">
-                            <label for="TipoEmpresa">Tipo de Empresa:</label>
-                            <select class="form-control" id="TipoEmpresa" name="TipoEmpresa" required>
-                                <option value="">Seleccione</option>
-                                <option value="Privada">Privada</option>
-                                <option value="Pública">Pública</option>
-                                <option value="Mixta">Mixta</option>
-                                <option value="Entidad_Sin_Animo_Lucro">Entidad Sin Ánimo de Lucro</option>
-                            </select>
+                        <div class="form-row">
+                            <div class="form-group col-md-4">
+                                <label for="nacionalidad"> Nacionalidad (PN):</label>
+                                <input type="text" class="form-control" id="nacionalidad" name="nacionalidad" required>
+                            </div>
+                            <div class="form-group col-md-4">
+                                <label for="profesion"> Profesion (PN):</label>
+                                <input type="text" class="form-control" id="profesion" name="profesion" required>
+                            </div>
+                            <div class="form-group col-md-4">
+                                <label for="ocupacionOficio"> Ocupacion u oficio (PN):</label>
+                                <input type="text" class="form-control" id="ocupacionOficio" name="ocupacionOficio" required>
+                            </div>
                         </div>
-                        <div class="mb-3">
-                            <label for="TamañoEmpresa">Tamaño:</label>
-                            <select class="form-control" id="TamañoEmpresa" name="TamañoEmpresa" required>
-                                <option value="">Seleccione</option>
-                                <option value="Microempresa">Microempresa</option>
-                                <option value="Pequeña">Pequeña</option>
-                                <option value="Mediana">Mediana</option>
-                                <option value="Grande">Grande</option>
-                            </select>
+
+                        <div class="form-row">
+                            <div class="form-group col-md-4">
+                                <label for="proposito"> Proposito de la relacion legal o contractual:</label>
+                                <input type="text" class="form-control" id="proposito" name="proposito" required>
+                            </div>
+                            <div class="form-group col-md-4">
+                                <label for="paginaWeb"> Pagina web (PN o PJ):</label>
+                                <input type="text" class="form-control" id="paginaWeb" name="paginaWeb" required>
+                            </div>
+                            <div class="form-group col-md-4">
+                                <label for="informeEmail"> Envio de facturacion electronica (PN o PJ):</label>
+                                <input type="text" class="form-control" id="informeEmail" name="informeEmail" required>
+                            </div>
                         </div>
-                        <div class="mb-3">
-                            <label for="FechaInicio">Fecha de inicio de actividades o constitucion(PJ):</label>
-                            <input type="text" class="form-control" id="FechaInicio" name="FechaInicio" required>
+
+                        <div class="form-row">
+                            <div class="form-group col-md-4">
+                                <label for="correoContacto"> Correo electronico de contacto (PN o PJ):</label>
+                                <input type="text" class="form-control" id="correoContacto" name="correoContacto" required>
+                            </div>
+                            <div class="form-group col-md-4">
+                                <label for="direccionDomicilio"> Direccion de la empresa o persona natural:</label>
+                                <input type="text" class="form-control" id="direccionDomicilio" name="direccionDomicilio" required>
+                            </div>
+                            <div class="form-group col-md-4">
+                                <label for="ciudad"> Ciudad(PN o PJ):</label>
+                                <input type="text" class="form-control" id="ciudad" name="ciudad" required>
+                            </div>
                         </div>
-                        <div class="mb-3">
-                            <label for="Experiencia">Experiencia en el mercado (Años)(PN,PJ):</label>
-                            <input type="text" class="form-control" id="Experiencia" name="Experiencia" required>
+
+                        <div class="form-row">
+                            <div class="form-group col-md-4">
+                                <label for="pais"> Pais (PN o PJ):</label>
+                                <input type="text" class="form-control" id="pais" name="pais" required>
+                            </div>
+                            <div class="form-group col-md-4">
+                                <label for="telefonoFijo"> Telefono fijo (PN o PJ):</label>
+                                <input type="text" class="form-control" id="telefonoFijo" name="telefonoFijo" required>
+                            </div>
+                            <div class="form-group col-md-4">
+                                <label for="numeroCelular"> Numero celular (PN o PJ):</label>
+                                <input type="text" class="form-control" id="numeroCelular" name="numeroCelular" required>
+                            </div>
                         </div>
-                        <div class="mb-3">
-                            <label for="PersonaContacto"> Nombre persona contacto (PN o PJ):</label>
-                            <input type="text" class="form-control" id="PersonaContacto" name="PersonaContacto" required>
+
+                        <div class="form-row">
+                            <div class="form-group col-md-4">
+                                <label for="casa">Tiene casa matriz (PJ):</label>
+                                <select class="form-control" id="casa" name="casa" required>
+                                    <option value="">Seleccione</option>
+                                    <option value="Si">Si</option>
+                                    <option value="No">No</option>
+                                </select>
+                            </div>
+                            <div class="form-group col-md-4">
+                                <label for="nombreCasa"> Nombre de la casa matriz (PJ):</label>
+                                <input type="text" class="form-control" id="nombreCasa" name="nombreCasa" required>
+                            </div>
+                            <div class="form-group col-md-4">
+                                <label for="direccionCasa"> Direccion domicilio de la casa matriz (PJ):</label>
+                                <input type="text" class="form-control" id="direccionCasa" name="direccionCasa" required>
+                            </div>
                         </div>
-                        <div class="mb-3">
-                            <label for="OcupacionContacto"> Cargo u ocupacion de la persona de contacto (PN o PJ)</label>
-                            <input type="text" class="form-control" id="OcupacionContacto" name="OcupacionContacto" required>
-                        </div>
-                        <div class="mb-3">
-                            <label for="Nacionalidad"> Nacionalidad (PN):</label>
-                            <input type="text" class="form-control" id="Nacionalidad" name="Nacionalidad" required>
-                        </div>
-                        <div class="mb-3">
-                            <label for="Profesion"> Profesion (PN):</label>
-                            <input type="text" class="form-control" id="Profesion" name="Profesion" required>
-                        </div>
-                        <div class="mb-3">
-                            <label for="Ocupacion_oficio"> Ocupacion u oficio (PN):</label>
-                            <input type="text" class="form-control" id="Ocupacion_oficio" name="Ocupacion_oficio" required>
-                        </div>
-                        <div class="mb-3">
-                            <label for="Proposito"> Proposito de la relacion legal o contractual:</label>
-                            <input type="text" class="form-control" id="Proposito" name="Proposito" required>
-                        </div>
-                        <div class="mb-3">
-                            <label for="Pagina_Web"> Pagina web (PN o PJ):</label>
-                            <input type="text" class="form-control" id="Pagina_Web" name="Pagina_Web" required>
-                        </div>
-                        <div class="mb-3">
-                            <label for="Informe_Email"> Informar email para envio de facturacion electronica (PN o PJ):</label>
-                            <input type="text" class="form-control" id="Informe_Email" name="Informe_Email" required>
-                        </div>
-                        <div class="mb-3">
-                            <label for="Correo_Contacto"> Correo electronico de contacto (PN o PJ):</label>
-                            <input type="text" class="form-control" id="Correo_Contacto" name="Correo_Contacto" required>
-                        </div>
-                        <div class="mb-3">
-                            <label for="Direccion_domicilio"> Direccion domicilio de la empresa o persona natural:</label>
-                            <input type="text" class="form-control" id="Direccion_domicilio" name="Direccion_domicilio" required>
-                        </div>
-                        <div class="mb-3">
-                            <label for="Ciudad"> Ciudad(PN o PJ):</label>
-                            <input type="text" class="form-control" id="Ciudad" name="Ciudad" required>
-                        </div>
-                        <div class="mb-3">
-                            <label for="Pais"> Pais (PN o PJ):</label>
-                            <input type="text" class="form-control" id="Pais" name="Pais" required>
-                        </div>
-                        <div class="mb-3">
-                            <label for="Telefono_fijo"> Telefono fijo (PN o PJ):</label>
-                            <input type="text" class="form-control" id="Telefono_fijo" name="Telefono_fijo" required>
-                        </div>
-                        <div class="mb-3">
-                            <label for="Numero_Celular"> Numero celular (PN o PJ):</label>
-                            <input type="text" class="form-control" id="Numero_Celular" name="Numero_Celular" required>
-                        </div>
-                        <div class="mb-3">
-                            <label for="Casa">Tiene casa matriz (PJ):</label>
-                            <select class="form-select" id="Casa" name="Casa" required>
-                                <option value="">Seleccione</option>
-                                <option value="Si">Si</option>
-                                <option value="No">No</option>
-                            </select>
-                        </div>
-                        <div class="mb-3">
-                            <label for="Nombre_Casa"> Nombre de la casa matriz (PJ):</label>
-                            <input type="text" class="form-control" id="Nombre_Casa" name="Nombre_Casa" required>
-                        </div>
-                        <div class="mb-3">
-                            <label for="Direccion_Casa"> Direccion domicilio de la casa matriz (PJ):</label>
-                            <input type="text" class="form-control" id="Direccion_Casa" name="Direccion_Casa" required>
-                        </div>
-                        <div class="mb-3">
-                            <label for="Pais_Pj"> Pais (PJ):</label>
-                            <input type="text" class="form-control" id="Pais_Pj" name="Pais_Pj" required>
-                        </div>
-                        <div class="mb-3">
-                            <label for="Ciudad_Pj"> Ciudad (PJ):</label>
-                            <input type="text" class="form-control" id="Ciudad_Pj" name="Ciudad_Pj" required>
+
+                        <div class="form-row">
+                            <div class="form-group col-md-4">
+                                <label for="paisPj"> Pais (PJ):</label>
+                                <input type="text" class="form-control" id="paisPj" name="paisPj" required>
+                            </div>
+                            <div class="form-group col-md-4">
+                                <label for="ciudadPj"> Ciudad (PJ):</label>
+                                <input type="text" class="form-control" id="ciudadPj" name="ciudadPj" required>
+                            </div>
                         </div>
                     </div>
-                </div>
             </div>
-        </div>
+            <div class="card mt-4">
+                    <div class="card-header">
+                        Información del Representante Legal que firma documento (Aplica para Persona Jurídica)
+                    </div>
+                    <div class="card-body">
+                        <div class="form-row">
+                            <div class="form-group col-md-4">
+
+                            </div>
+                            <div class="form-group col-md-4">
+
+                            </div>
+                            <div class="form-group col-md-4">
+
+                            </div>
+                        </div>
+
+                        <div class="form-row">
+                            <div class="form-group col-md-4">
+
+                            </div>
+                            <div class="form-group col-md-4">
+
+                            </div>
+                            <div class="form-group col-md-4">
+
+                            </div>
+                        </div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                    </div>
+            </div>
+
+
+
+
+
+
+
+
+
+        </form>
     </div>
 </body>
 </html>
-<?php
-
-    } else {
-        echo "<p>Usted no tiene permisos para ver esta sección<p>";
-
-        if ($_SESSION['rol'] === 'proveedor'){
-            echo "<meta http-equiv='refresh' content='3;url=Proveedores.php'>";
-            exit;
-        }
-        if ($_SESSION['rol'] === 'empleado'){
-            echo "<meta http-equiv='refresh' content='3;url=Empleados.php'>";
-            exit;
-        }
-    }
-} else {
-    header("Location: Login.php");
-    exit();
-}
-
-?>
