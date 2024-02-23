@@ -4,17 +4,17 @@ session_start();
 // Habilitar output buffering 
 ob_start();
 
-// Incluir el archivo de conexión a la base de datos
-include 'Connection.php';
-
 // Verificar si se ha enviado el formulario
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
+    // Incluir el archivo de conexión a la base de datos
+    include 'Connection.php';
+    
     // Obtener el correo y la contraseña enviados por el formulario
     $Correo = $_POST['correo'];
     $Contrasena = $_POST['contrasena'];
 
     // Consultar la base de datos para verificar si el correo existe
-    $query = "SELECT * FROM usuarios WHERE correo = :correo";
+    $query = "SELECT * FROM register WHERE correo = :correo";
     $stmt = $pdo->prepare($query);
     $stmt->execute(['correo' => $Correo]);
 
@@ -27,7 +27,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             // La contraseña es correcta, redirigir al usuario según su rol
             $_SESSION["booleano"] = true;
             $_SESSION["usuario"] = $row['usuario'];
-            $_SESSION["id"] = $row['id'];
+            $_SESSION["id"] = $row['idregister'];
             $_SESSION["rol"] = $row['rol'];
             switch ($row['rol']) {
                 case 'cliente':

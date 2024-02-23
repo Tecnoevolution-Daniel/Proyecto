@@ -16,7 +16,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $Rol = $_POST['rol'];
 
      //Validacion donde no se repitan los correos
-     $query = "SELECT * FROM usuarios WHERE correo = :correo";
+     $query = "SELECT * FROM register WHERE correo = :correo";
      $stmt = $pdo->prepare($query);
      $stmt->execute(['correo' => $Correo]);
      if ($stmt->rowCount() > 0) {
@@ -44,7 +44,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
 
     // Agregar los datos a la Base de datos
-    $query = "INSERT INTO usuarios(usuario, correo, contrasena, repita_contrasena, rol) VALUES(:usuario, :correo, :contrasena, :repita_contrasena, :rol)";
+    $query = "INSERT INTO register(usuario, correo, contrasena, repita_contrasena, rol) VALUES(:usuario, :correo, :contrasena, :repita_contrasena, :rol)";
     $stmt = $pdo->prepare($query);
     $stmt->execute(['usuario' => $Usuario, 'correo' => $Correo, 'contrasena' => $hashedContrasena, 'repita_contrasena' => $RepitahashedContrasena, 'rol' => $Rol]);
 

@@ -14,7 +14,6 @@ try {
     // Configurar el modo de error para lanzar excepciones
     $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
     
-    //echo "Conexión exitosa";
 } catch(PDOException $e) {
     // Capturar y mostrar cualquier error de conexión
     die("Conexión fallida: " . $e->getMessage());

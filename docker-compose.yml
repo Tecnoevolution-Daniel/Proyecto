@@ -34,4 +34,4 @@ services:
       - MYSQL_PORT=3306
       - MYSQL_USER=root
       - MYSQL_PASSWORD=root
-      - MYSQL_DATABASE=prueba
+      - MYSQL_DATABASE=formulario

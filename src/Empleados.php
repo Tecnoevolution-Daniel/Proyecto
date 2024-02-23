@@ -1,9 +1,112 @@
+<?php
+
+// Conexion a la base de datos
+include 'Connection.php';
+session_start();
+
+if (empty($_SESSION['booleano'])) {
+    header("Location: Login.php");
+    exit();
+}
+
+if ($_SERVER["REQUEST_METHOD"] == "POST") {
+    // Obtener el ID generado automáticamente
+    $last_id = $_SESSION['id'];
+
+    // Insertar datos en la tabla 'empleados'
+    $stmt = $pdo->prepare("INSERT INTO empleados (id_register) VALUES (:id_register)");
+    $stmt->bindParam(':id_register', $last_id);
+    $stmt->execute();
+
+    // Obtener el ID del empleado generado automáticamente
+    $id_empleado = $pdo->lastInsertId();
+
+    // Insertar datos en la subtabla 'empleados_datos_personales'
+    $stmt = $pdo->prepare("INSERT INTO empleados_datos_personales 
+                            (id_empleado, primerApellido, segundoApellido, nombres, numIdentificacion, tipoIdentificacion, lugarExpedicion, estadoCivil, numLibretaMilitar, distrito, clase) 
+                            VALUES (:id_empleado, :primerApellido, :segundoApellido, :nombres, :numIdentificacion, :tipoIdentificacion, :lugarExpedicion, :estadoCivil, :numLibretaMilitar, :distrito, :clase)");
+    $stmt->bindParam(':id_empleado', $id_empleado);
+    $stmt->bindParam(':primerApellido', $_POST['primerApellido']);
+    $stmt->bindParam(':segundoApellido', $_POST['segundoApellido']);
+    $stmt->bindParam(':nombres', $_POST['nombres']);
+    $stmt->bindParam(':numIdentificacion', $_POST['numIdentificacion']);
+    $stmt->bindParam(':tipoIdentificacion', $_POST['tipoIdentificacion']);
+    $stmt->bindParam(':lugarExpedicion', $_POST['lugarExpedicion']);
+    $stmt->bindParam(':estadoCivil', $_POST['estadoCivil']);
+    $stmt->bindParam(':numLibretaMilitar', $_POST['numLibretaMilitar']);
+    $stmt->bindParam(':distrito', $_POST['distrito']);
+    $stmt->bindParam(':clase', $_POST['clase']);
+    $stmt->execute();
+
+    // Insertar datos en la subtabla 'empleados_datos_contacto'
+    $stmt = $pdo->prepare("INSERT INTO empleados_datos_contacto 
+                            (id_empleado, direccionResidencia, barrio, telefonoFijo, celular, correoElectronico, eps, telefonoPadres, nombreConyuge, telefonoConyuge, empresaConyuge, otraPersonaContacto) 
+                            VALUES (:id_empleado, :direccionResidencia, :barrio, :telefonoFijo, :celular, :correoElectronico, :eps, :telefonoPadres, :nombreConyuge, :telefonoConyuge, :empresaConyuge, :otraPersonaContacto)");
+    $stmt->bindParam(':id_empleado', $id_empleado);
+    $stmt->bindParam(':direccionResidencia', $_POST['direccionResidencia']);
+    $stmt->bindParam(':barrio', $_POST['barrio']);
+    $stmt->bindParam(':telefonoFijo', $_POST['telefonoFijo']);
+    $stmt->bindParam(':celular', $_POST['celular']);
+    $stmt->bindParam(':correoElectronico', $_POST['correoElectronico']);
+    $stmt->bindParam(':eps', $_POST['eps']);
+    $stmt->bindParam(':telefonoPadres', $_POST['telefonoPadres']);
+    $stmt->bindParam(':nombreConyuge', $_POST['nombreConyuge']);
+    $stmt->bindParam(':telefonoConyuge', $_POST['telefonoConyuge']);
+    $stmt->bindParam(':empresaConyuge', $_POST['empresaConyuge']);
+    $stmt->bindParam(':otraPersonaContacto', $_POST['otraPersonaContacto']);
+    $stmt->execute();
+
+    // Insertar datos en la subtabla 'empleados_datos_academicos'
+    $stmt = $pdo->prepare("INSERT INTO empleados_datos_academicos 
+                            (id_empleado, nivelEducativo, profesional, titulo, institucionEducativa, fechaGrado) 
+                            VALUES (:id_empleado, :nivelEducativo, :profesional, :titulo, :institucionEducativa, :fechaGrado)");
+    $stmt->bindParam(':id_empleado', $id_empleado);
+    $stmt->bindParam(':nivelEducativo', $_POST['nivelEducativo']);
+    $stmt->bindParam(':profesional', $_POST['profesional']);
+    $stmt->bindParam(':titulo', $_POST['titulo']);
+    $stmt->bindParam(':institucionEducativa', $_POST['institucionEducativa']);
+    $stmt->bindParam(':fechaGrado', $_POST['fechaGrado']);
+    $stmt->execute();
+
+    // Insertar datos en la subtabla 'empleados_datos_vehiculos_licencias'
+    $stmt = $pdo->prepare("INSERT INTO empleados_datos_vehiculos_licencias 
+                            (id_empleado, vehiculo, marca, modelo, licenciaConduccion, numeroLicencia, categoriaLicencia, fechaVcto) 
+                            VALUES (:id_empleado, :vehiculo, :marca, :modelo, :licenciaConduccion, :numeroLicencia, :categoriaLicencia, :fechaVcto)");
+    $stmt->bindParam(':id_empleado', $id_empleado);
+    $stmt->bindParam(':vehiculo', $_POST['vehiculo']);
+    $stmt->bindParam(':marca', $_POST['marca']);
+    $stmt->bindParam(':modelo', $_POST['modelo']);
+    $stmt->bindParam(':licenciaConduccion', $_POST['licenciaConduccion']);
+    $stmt->bindParam(':numeroLicencia', $_POST['numeroLicencia']);
+    $stmt->bindParam(':categoriaLicencia', $_POST['categoriaLicencia']);
+    $stmt->bindParam(':fechaVcto', $_POST['fechaVcto']);
+    $stmt->execute();
+
+    // Insertar datos en la subtabla 'empleados_datos_salud_familiar'
+    $stmt = $pdo->prepare("INSERT INTO empleados_datos_salud_familiar 
+    (id_empleado, fechaNacimiento, lugarNacimientoPais, lugarNacimientoCiudad, lugarNacimientoDpto, fecha, grupoSanguineo, tieneViviendaPropia, fondoPension, fondoCesantias, nombresApellidosPadres) 
+    VALUES (:id_empleado, :fechaNacimiento, :lugarNacimientoPais, :lugarNacimientoCiudad, :lugarNacimientoDpto, :fecha, :grupoSanguineo, :tieneViviendaPropia, :fondoPension, :fondoCesantias, :nombresApellidosPadres)");
+    $stmt->bindParam(':id_empleado', $id_empleado);
+    $stmt->bindParam(':fechaNacimiento', $_POST['fechaNacimiento']);
+    $stmt->bindParam(':lugarNacimientoPais', $_POST['lugarNacimientoPais']);
+    $stmt->bindParam(':lugarNacimientoCiudad', $_POST['lugarNacimientoCiudad']);
+    $stmt->bindParam(':lugarNacimientoDpto', $_POST['lugarNacimientoDpto']);
+    $stmt->bindParam(':fecha', $_POST['fecha']);
+    $stmt->bindParam(':grupoSanguineo', $_POST['grupoSanguineo']);
+    $stmt->bindParam(':tieneViviendaPropia', $_POST['tieneViviendaPropia']);
+    $stmt->bindParam(':fondoPension', $_POST['fondoPension']);
+    $stmt->bindParam(':fondoCesantias', $_POST['fondoCesantias']);
+    $stmt->bindParam(':nombresApellidosPadres', $_POST['nombresApellidosPadres']);
+    $stmt->execute();
+}
+?>
+
 <!DOCTYPE html>
 <html lang="es">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Datos empleado</title>
+    <title>Datos empleado - Usuario: <?= $_SESSION['usuario'] ?></title>
     <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
 </head>
 <body>
@@ -168,12 +271,12 @@
                     <label for="licenciaConduccion">Licencia de Conducción:</label>
                     <input type="text" class="form-control" id="licenciaConduccion" required>
                 </div>
-            </div>
-            <div class="form-row">
                 <div class="form-group col-md-4">
                     <label for="numeroLicencia">Número:</label>
                     <input type="text" class="form-control" id="numeroLicencia" required>
                 </div>
+            </div>
+            <div class="form-row">                
                 <div class="form-group col-md-4">
                     <label for="categoriaLicencia">Categoría:</label>
                     <input type="text" class="form-control" id="categoriaLicencia" required>
@@ -182,12 +285,12 @@
                     <label for="fechaVcto">Fecha Vencimiento:</label>
                     <input type="text" class="form-control" id="fechaVcto" required>
                 </div>
-            </div>
-            <div class="form-row">
                 <div class="form-group col-md-4">
                     <label for="tallaZapatos">Talla Zapatos:</label>
                     <input type="text" class="form-control" id="tallaZapatos" required>
                 </div>
+            </div>
+            <div class="form-row">             
                 <div class="form-group col-md-4">
                     <label for="tallaCamisa">Talla Camisa:</label>
                     <input type="text" class="form-control" id="tallaCamisa" required>
@@ -196,12 +299,12 @@
                     <label for="tallaPantalon">Talla Pantalón:</label>
                     <input type="text" class="form-control" id="tallaPantalon" required>
                 </div>
-            </div>
-            <div class="form-row">
                 <div class="form-group col-md-4">
                     <label for="grupoSanguineo">Grupo Sanguíneo:</label>
                     <input type="text" class="form-control" id="grupoSanguineo" required>
                 </div>
+            </div>
+            <div class="form-row">               
                 <div class="form-group col-md-4">
                     <label for="tieneViviendaPropia">Tiene Vivienda Propia:</label>
                     <select id="tieneViviendaPropia" class="form-control" required>
@@ -210,8 +313,6 @@
                         <option>No</option>
                     </select>
                 </div>
-            </div>
-            <div class="form-row">
                 <div class="form-group col-md-4">
                     <label for="eps">Empresa Promotora de Salud (EPS):</label>
                     <input type="text" class="form-control" id="eps" required>
@@ -220,12 +321,12 @@
                     <label for="correoElectronico">Correo Electrónico:</label>
                     <input type="email" class="form-control" id="correoElectronico" required>
                 </div>
+            </div>
+            <div class="form-row">               
                 <div class="form-group col-md-4">
                     <label for="fondoPension"> Fondo de pensiones(AFP):</label>
                     <input type="text" class="form-control" id="FondoPension" required>
                 </div>
-            </div>
-            <div class="form-row">
                 <div class="form-group col-md-4">
                     <label for="fondoCesantias">Fondo de cesantias:</label>
                     <input type="text" class="form-control" id="FondoCesantias" required>
