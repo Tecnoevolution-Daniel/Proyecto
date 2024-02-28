@@ -8,7 +8,7 @@ $database = getenv('MYSQL_DATABASE');   // 'prueba'
 
 try {
     // Crear una instancia de la conexión PDO
-    $dsn = "mysql:host=$host;port=$port;dbname=$database";
+    $dsn = "mysql:host=$host;dbname=$database";
     $pdo = new PDO($dsn, $user, $password);
     
     // Configurar el modo de error para lanzar excepciones
