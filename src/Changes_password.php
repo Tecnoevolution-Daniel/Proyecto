@@ -5,6 +5,8 @@ use PHPMailer\PHPMailer\Exception;
 
 // Incluir el archivo de conexión a la base de datos
 include 'Connection.php';
+include 'vendor/autoload.php';
+
 
 // Función para generar una contraseña segura
 function generarContrasenaSegura($longitud = 10) {
@@ -45,21 +47,21 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         try {
             // Configurar el servidor SMTP
             $mail->isSMTP();
-            $mail->Host = 'tu_servidor_smtp';
+            $mail->Host = 'smtp.gmail.com';
             $mail->SMTPAuth = true;
-            $mail->Username = 'tu_correo@example.com';
-            $mail->Password = 'tu_contraseña';
+            $mail->Username = 'alexander.correa.pruebas@gmail.com';
+            $mail->Password = 'bmjh bewn kgai gedt';
             $mail->SMTPSecure = 'tls'; // Puede ser 'ssl' o 'tls'
             $mail->Port = 587; // Puerto SMTP
 
             // Configurar el remitente y el destinatario
-            $mail->setFrom('tu_correo@example.com', 'Nombre Remitente');
+            $mail->setFrom('alexander.correa.pruebas@gmail.com', 'Recuperacion de contrasena');
             $mail->addAddress($Correo);
 
             // Configurar el contenido del correo
             $mail->isHTML(true);
-            $mail->Subject = 'Recuperación de contraseña';
-            $mail->Body = "Tu nueva contraseña es: $nuevaContrasena";
+            $mail->Subject = 'Recuperacion de contrasena';
+            $mail->Body = "Tu nueva contrasena es: $nuevaContrasena";
 
             // Enviar el correo electrónico
             $mail->send();
