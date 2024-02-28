@@ -1,14 +1,121 @@
+<?php
+// Conexion a la base de datos
+include 'Connection.php';
+session_start();
+
+// Verificar la conexión a la base de datos
+if (!$pdo) {
+    die("Error en la conexión a la base de datos: " . $pdo->errorInfo()[2]);
+}
+if (empty($_SESSION['booleano'])) {
+    header("Location: Login.php");
+    exit();
+}
+if ($_SERVER["REQUEST_METHOD"] == "POST") {
+    try{
+        // Obtener el ID generado automáticamente
+        $last_id = $_SESSION['id'];
+
+        // Insertar datos en la tabla 'clientes'
+        $stmt = $pdo->prepare("INSERT INTO clientes (id_register) VALUES (:id_register)");
+        $stmt->bindParam(':id_register', $last_id);
+        $stmt->execute();
+
+        // Obtener el ID del cliente generado automáticamente
+        $id_cliente = $pdo->lastInsertId();
+
+        // Insertar en la tabla `informacion_empresa`
+        $stmt = $pdo->prepare("INSERT INTO informacion_empresa (id_cliente, tipoSolicitud, proceso) VALUES (:id_cliente, :tipoSolicitud, :proceso)");
+        $stmt->bindParam(':id_cliente', $id_cliente);
+        $stmt->bindParam(':tipoSolicitud', $_POST['tipoSolicitud']);
+        $stmt->bindParam(':proceso', $_POST['proceso']);
+        //$stmt->bindParam(':fecha', $_POST['fecha']);
+        // Formatear la fecha al formato YYYY/MM/DD
+        //$fecha = date('Y-m-d', strtotime($_POST['fecha']));
+        //$stmt->bindParam(':fecha', $fecha);
+        $stmt->execute();
+
+        // Insertar en la tabla `info_basica`
+        $stmt = $pdo->prepare("INSERT INTO info_basica (id_cliente, nombreRazonSocial, nit, tipoSociedad, tipoEmpresa, tamanoEmpresa, fechaInicio, experiencia, personaContacto, ocupacionContacto, nacionalidad, profesion, ocupacionOficio, proposito, paginaWeb, informeEmail, correoContacto, direccionDomicilio, ciudad, pais, telefonoFijo, numeroCelular, casa, nombreCasa, direccionCasa, paisPJ, ciudadPJ) 
+                                VALUES (:id_cliente, :nombreRazonSocial, :nit, :tipoSociedad, :tipoEmpresa, :tamanoEmpresa, :fechaInicio, :experiencia, :personaContacto, :ocupacionContacto, :nacionalidad, :profesion, :ocupacionOficio, :proposito, :paginaWeb, :informeEmail, :correoContacto, :direccionDomicilio, :ciudad, :pais, :telefonoFijo, :numeroCelular, :casa, :nombreCasa, :direccionCasa, :paisPJ, :ciudadPJ)");
+        $stmt->bindParam(':id_cliente', $id_cliente);
+        $stmt->bindParam(':nombreRazonSocial', $_POST['nombreRazonSocial']);
+        $stmt->bindParam(':nit', $_POST['nit']);
+        $stmt->bindParam(':tipoSociedad', $_POST['tipoSociedad']);
+        $stmt->bindParam(':tipoEmpresa', $_POST['tipoEmpresa']);
+        $stmt->bindParam(':tamanoEmpresa', $_POST['tamanoEmpresa']);
+        $stmt->bindParam(':fechaInicio', $_POST['fechaInicio']);
+        $stmt->bindParam(':experiencia', $_POST['experiencia']);
+        $stmt->bindParam(':personaContacto', $_POST['personaContacto']);
+        $stmt->bindParam(':ocupacionContacto', $_POST['ocupacionContacto']);
+        $stmt->bindParam(':nacionalidad', $_POST['nacionalidad']);
+        $stmt->bindParam(':profesion', $_POST['profesion']);
+        $stmt->bindParam(':ocupacionOficio', $_POST['ocupacionOficio']);
+        $stmt->bindParam(':proposito', $_POST['proposito']);
+        $stmt->bindParam(':paginaWeb', $_POST['paginaWeb']);
+        $stmt->bindParam(':informeEmail', $_POST['informeEmail']);
+        $stmt->bindParam(':correoContacto', $_POST['correoContacto']);
+        $stmt->bindParam(':direccionDomicilio', $_POST['direccionDomicilio']);
+        $stmt->bindParam(':ciudad', $_POST['ciudad']);
+        $stmt->bindParam(':pais', $_POST['pais']);
+        $stmt->bindParam(':telefonoFijo', $_POST['telefonoFijo']);
+        $stmt->bindParam(':numeroCelular', $_POST['numeroCelular']);
+        $stmt->bindParam(':casa', $_POST['casa']);
+        $stmt->bindParam(':nombreCasa', $_POST['nombreCasa']);
+        $stmt->bindParam(':direccionCasa', $_POST['direccionCasa']);
+        $stmt->bindParam(':paisPJ', $_POST['paisPJ']);
+        $stmt->bindParam(':ciudadPJ', $_POST['ciudadPJ']);
+        $stmt->execute();
+
+         // Insertar en la tabla `info_representante_legal`
+        $stmt = $pdo->prepare("INSERT INTO info_representante_legal (id_cliente, nombresApellidos, numIdentificacion, tipoIdentificacion, fechaExpedicion, lugarExpedicion, lugarNacimientoCiudad, fechaNacimiento, paisNacimiento, profesion, accionista, correoElectronico, numContacto) 
+                                VALUES (:id_cliente, :nombresApellidos, :numIdentificacion, :tipoIdentificacion, :fechaExpedicion, :lugarExpedicion, :lugarNacimientoCiudad, :fechaNacimiento, :paisNacimiento, :profesion, :accionista, :correoElectronico, :numContacto)");
+        $stmt->bindParam(':id_cliente', $id_cliente);
+        $stmt->bindParam(':nombresApellidos', $_POST['nombresApellidos']);
+        $stmt->bindParam(':numIdentificacion', $_POST['numIdentificacion']);
+        $stmt->bindParam(':tipoIdentificacion', $_POST['tipoIdentificacion']);
+        $stmt->bindParam(':fechaExpedicion', $_POST['fechaExpedicion']);
+        $stmt->bindParam(':lugarExpedicion', $_POST['lugarExpedicion']);
+        $stmt->bindParam(':lugarNacimientoCiudad', $_POST['lugarNacimientoCiudad']);
+        $stmt->bindParam(':fechaNacimiento', $_POST['fechaNacimiento']);
+        $stmt->bindParam(':paisNacimiento', $_POST['paisNacimiento']);
+        $stmt->bindParam(':profesion', $_POST['profesion']);
+        $stmt->bindParam(':accionista', $_POST['accionista']);
+        $stmt->bindParam(':correoElectronico', $_POST['correoElectronico']);
+        $stmt->bindParam(':numContacto', $_POST['numContacto']);
+        $stmt->execute();
+
+        // Insertar en la tabla `info_actividad_economica`
+        $stmt = $pdo->prepare("INSERT INTO info_actividad_economica (id_cliente, codigo, lineaProductos, actividad, especialidad, informacionTributaria, resolucion) 
+                                VALUES (:id_cliente, :codigo, :lineaProductos, :actividad, :especialidad, :informacionTributaria, :resolucion)");
+        $stmt->bindParam(':id_cliente', $id_cliente);
+        $stmt->bindParam(':codigo', $_POST['codigo']);
+        $stmt->bindParam(':lineaProductos', $_POST['lineaProductos']);
+        $stmt->bindParam(':actividad', $_POST['actividad']);
+        $stmt->bindParam(':especialidad', $_POST['especialidad']);
+        $stmt->bindParam(':informacionTributaria', $_POST['informacionTributaria']);
+        $stmt->bindParam(':resolucion', $_POST['resolucion']);
+        $stmt->execute();
+
+
+    }catch(PDOException $e){
+        die("Error al insertar datos: " . $e->getMessage());
+    }
+}
+
+?>
+
 <!DOCTYPE html>
 <html lang="es">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Datos empleado</title>
+    <title>Datos Clientes - Usuario: <?= $_SESSION['usuario'] ?></title>
     <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
 </head>
 <body>
     <div class="container mt-5">
-        <form>
+        <form action="Clientes.php" method="post">
             <legend>Datos del cliente</legend>
             <div class="card">
                     <div class="card-header">
@@ -18,7 +125,7 @@
                         <div class="form-row">
                             <div class="form-group col-md-4">
                                 <label for="tipoSolicitud">Tipo de solicitud:</label>
-                                <select class="form-control" id="tipoSolicitud" name="tipoSolicitud" required>
+                                <select class="form-control" id="tipoSolicitud" name="tipoSolicitud" >
                                     <option value="">Seleccione</option>
                                     <option value="personaJuridica">Persona jurídica</option>
                                     <option value="personaNatural">Persona natural</option>
@@ -26,7 +133,7 @@
                             </div>                            
                             <div class="form-group col-md-4">
                                 <label for="proceso">Proceso:</label>
-                                <select class="form-control" id="proceso" name="proceso" required>
+                                <select class="form-control" id="proceso" name="proceso" >
                                     <option value="">Seleccione</option>
                                     <option value="Creacion">Creación</option>
                                     <option value="Actualizacion">Actualización</option>
@@ -34,7 +141,7 @@
                             </div>
                             <div class="form-group col-md-4">
                                 <label for="fecha">Fecha:</label>
-                                <input type="date" class="form-control" id="fecha" required>
+                                <input type="date" class="form-control" id="fecha" >
                             </div>
                         </div>
                     </div>
@@ -81,8 +188,8 @@
                                 </select>
                             </div>
                             <div class="form-group col-md-4">
-                                <label for="tamañoEmpresa">Tamaño:</label>
-                                <select class="form-control" id="tamañoEmpresa" name="tamañoEmpresa" required>
+                                <label for="tamanoEmpresa">Tamaño:</label>
+                                <select class="form-control" id="tamanoEmpresa" name="tamanoEmpresa" required>
                                     <option value="">Seleccione</option>
                                     <option value="microempresa">Microempresa</option>
                                     <option value="pequeña">Pequeña</option>
@@ -159,7 +266,7 @@
                         <div class="form-row">
                             <div class="form-group col-md-4">
                                 <label for="pais"> Pais (PN o PJ):</label>
-                                <input type="text" class="form-control" id="pais" name="pais" required>
+                                <input type="text" class="form-control" id="pais" name="pais">
                             </div>
                             <div class="form-group col-md-4">
                                 <label for="telefonoFijo"> Telefono fijo (PN o PJ):</label>
@@ -231,7 +338,7 @@
                         <div class="form-row">
                             <div class="form-group col-md-4">
                                 <label for="fechaExpedicion">Fecha de expedicion:</label>
-                                <input type="text" class="form-control" id="fechaExpedicion" name="fechaExpedicion" required>
+                                <input type="date" class="form-control" id="fechaExpedicion" name="fechaExpedicion" required>
                             </div>
                             <div class="form-group col-md-4">
                                 <label for="lugarExpedicion">Lugar de Expedición:</label>
@@ -249,8 +356,8 @@
                                 <input type="date" class="form-control" id="fechaNacimiento" name="fechaNacimiento" required>
                             </div>
                             <div class="form-group col-md-4">
-                                <label for="nacionalidad">Lugar de Nacimiento:</label>
-                                <input type="text" class="form-control" id="nacionalidad" name="nacionalidad" required>
+                                <label for="paisNacimiento">Lugar de Nacimiento:</label>
+                                <input type="text" class="form-control" id="paisNacimiento" name="paisNacimiento" required>
                             </div>
                             <div class="form-group col-md-4">
                                 <label for="profesion">Profesion:</label>
@@ -348,15 +455,7 @@
 
                     </div>
             </div>
-
-
-
-
-
-
-
-
-
+            <button type="submit" class="btn btn-primary">Enviar</button>
         </form>
     </div>
 </body>
