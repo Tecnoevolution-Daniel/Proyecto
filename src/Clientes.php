@@ -7,7 +7,7 @@ session_start();
 if (!$pdo) {
     die("Error en la conexión a la base de datos: " . $pdo->errorInfo()[2]);
 }
-if (empty($_SESSION['booleano'])) {
+if (empty($_SESSION['booleano']&& $_SESSION['rol'] == 'cliente')) {
     header("Location: Login.php");
     exit();
 }

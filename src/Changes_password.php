@@ -1,13 +1,13 @@
 <?php
-// Incluir la clase PHPMailer
+
 use PHPMailer\PHPMailer\PHPMailer;
 use PHPMailer\PHPMailer\Exception;
 
+//include 'vendor/autoload.php';
+
+require_once __DIR__ . '/vendor/autoload.php';
 // Incluir el archivo de conexión a la base de datos
 include 'Connection.php';
-include 'vendor/autoload.php';
-
-
 // Función para generar una contraseña segura
 function generarContrasenaSegura($longitud = 10) {
     // Caracteres válidos para la contraseña
@@ -26,7 +26,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $Correo = $_POST['correo'];
 
     // Consultar la base de datos para verificar si el correo existe
-    $query = "SELECT * FROM usuarios WHERE correo = :correo";
+    $query = "SELECT * FROM register WHERE correo = :correo";
     $stmt = $pdo->prepare($query);
     $stmt->execute(['correo' => $Correo]);
 
@@ -38,12 +38,12 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $nuevaContrasena = generarContrasenaSegura();
 
         // Actualizar la contraseña en la base de datos
-        $updateQuery = "UPDATE usuarios SET contrasena = :contrasena WHERE correo = :correo";
+        $updateQuery = "UPDATE register SET contrasena = :contrasena WHERE correo = :correo";
         $updateStmt = $pdo->prepare($updateQuery);
         $updateStmt->execute(['contrasena' => password_hash($nuevaContrasena, PASSWORD_DEFAULT), 'correo' => $Correo]);
 
         // Enviar el correo electrónico con la nueva contraseña utilizando PHPMailer
-        $mail = new PHPMailer(true); // Instancia de PHPMailer con manejo de excepciones activado
+        $mail = new PHPMailer(); // Instancia de PHPMailer con manejo de excepciones activado
         try {
             // Configurar el servidor SMTP
             $mail->isSMTP();
