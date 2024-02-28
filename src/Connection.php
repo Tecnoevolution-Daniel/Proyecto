@@ -1,10 +1,10 @@
 <?php
 // Obtener las variables de entorno para la conexión a la base de datos
-$host = getenv('MYSQL_HOST');
-$port = getenv('MYSQL_PORT');
-$user = getenv('MYSQL_USER');
-$password = getenv('MYSQL_PASSWORD');
-$database = getenv('MYSQL_DATABASE');
+$host = getenv('MYSQL_HOST');   //'localhost'
+$port = getenv('MYSQL_PORT');   //
+$user = getenv('MYSQL_USER');   // 'admin'
+$password = getenv('MYSQL_PASSWORD');   // '123'
+$database = getenv('MYSQL_DATABASE');   // 'prueba'
 
 try {
     // Crear una instancia de la conexión PDO
