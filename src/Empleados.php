@@ -9,10 +9,13 @@ if (!$pdo) {
     die("Error en la conexión a la base de datos: " . $pdo->errorInfo()[2]);
 }
 
-if (empty($_SESSION['booleano'] && $_SESSION['rol'] == 'empleado')) {
+if (empty($_SESSION['booleano']) && (empty($_SESSION['rol']) || $_SESSION['rol'] != 'empleado')) {
     header("Location: Login.php");
     exit();
 }
+
+
+if ($_SERVER["REQUEST_METHOD"] == "GET") log_action($_SESSION['id'], 'empleados', 'access', NULL);
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     try{
@@ -104,7 +107,26 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $stmt->bindParam(':nombresApellidosPadres', $_POST['nombresApellidosPadres']);
         $stmt->execute();
 
+
+        $stmt = $pdo->prepare("INSERT INTO empleados_relacion_hijos(id_empleado, nombre, parentesco, nacimiento, edad, gradoEscolar)
+                        VALUE(:id_empleado, :nombre, :parentesco, :nacimiento, :edad, :gradoEscolar)");
+
+        $data = json_decode($_POST['tableKids'], true);
+        foreach($data as $row) {
+            $stmt->execute([
+                ':id_empleado' => $id_empleado,
+                ':nombre' => $row['nombre'],
+                ':parentesco' => $row['parentesco'],
+                ':nacimiento' => $row['nacimiento'],
+                ':edad' => $row['edad'],
+                ':gradoEscolar' => $row['escolaridad'],
+            ]);
+        }
+
+        log_action($_SESSION['id'], 'empleados', 'insert', NULL);
+
     }catch(PDOException $e){
+        log_action($_SESSION['id'], 'empleados', 'insert:error', $e->getMessage());
         die("Error al insertar datos: " . $e->getMessage());
     }
 }
@@ -118,6 +140,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Datos empleado - Usuario: <?= $_SESSION['usuario'] ?></title>
     <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <script src="//unpkg.com/alpinejs" defer></script>
 </head>
 <body>
     <div class="container mt-5">
@@ -339,26 +362,64 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             <div class="form-row">
                 <div class="form-group col-md-12">
                     <h5>Relación de Hijos y Personas a Cargo</h5>
-                    <table class="table table-bordered">
+                    <table x-data="table_kids" class="table table-striped">
                         <thead>
                             <tr>
-                                <th>Nombres y Apellidos</th>
+                                <th>Nombres</th>
                                 <th>Parentesco</th>
-                                <th>Fecha de Nacimiento</th>
+                                <th>Fecha Nacimiento</th>
                                 <th>Edad</th>
-                                <th>Grado Escolaridad</th>
+                                <th>Grado escolaridad</th>
                             </tr>
                         </thead>
                         <tbody>
-                            <tr>
-                                <td><input type="text" class="form-control" ></td>
-                                <td><input type="text" class="form-control" ></td>
-                                <td><input type="date" class="form-control" ></td>
-                                <td><input type="text" class="form-control" ></td>
-                                <td><input type="text" class="form-control" ></td>
-                            </tr>
+                            <template x-for="row in length">
+                                <tr x-bind:key="row">
+                                    <td><input type="text" class="form-control" x-on:input="updateData(row - 1, 'nombre', $el.value)" required></td>
+                                    <td><input type="text" class="form-control" x-on:input="updateData(row - 1, 'parentesco', $el.value)" required></td>
+                                    <td><input type="date" class="form-control" x-on:input="updateData(row - 1, 'nacimiento', $el.value)" required></td>
+                                    <td><input type="number" class="form-control" x-on:input="updateData(row - 1, 'edad', $el.value)" required></td>
+                                    <td><input type="text" class="form-control" x-on:input="updateData(row - 1, 'escolaridad', $el.value)" required></td>
+                                </tr>
+                            </template>
                         </tbody>
+                        <tfoot>
+                            <tr>
+                                <td colspan="4">
+                                    <button type="button" class="btn btn-success" x-on:click="addRow">Añadir columna</button>
+                                    <button type="button" class="btn btn-danger" x-on:click="deleteRow">Eliminar columna</button>
+                                </td>
+                                <td>
+                                    <input type="hidden" name="tableKids" x-bind:value="JSON.stringify(data)">
+                                </td>
+                            </tr>
+                        </tfoot>
                     </table>
+
+
+                    <script>
+                    document.addEventListener('alpine:init', () => {
+                        Alpine.data('table_kids', () => ({
+                            data: [{}],
+                            length: 1,
+
+                            addRow() {
+                                this.length += 1;
+                                this.data = [...this.data, {}];
+                            },
+                            deleteRow() {
+                                if (this.length == 0) return;
+
+                                this.length -= 1;
+                                this.data = this.data.slice(0, this.length);
+                            },
+
+                            updateData(row, parameter, value) {
+                                this.data[row][parameter] = value;
+                            },
+                        }));
+                    });
+                    </script>
                 </div>
             </div>
             <div class="form-row">

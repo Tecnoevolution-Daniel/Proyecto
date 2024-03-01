@@ -18,4 +18,15 @@ try {
     // Capturar y mostrar cualquier error de conexión
     die("Conexión fallida: " . $e->getMessage());
 }
+
+function log_action($user_id, $module, $action, $description = NULL) {
+    global $pdo;
+    $sql = $pdo->prepare('INSERT INTO registro_administrativo VALUES (DEFAULT, :module, :action, :register, :description, DEFAULT)');
+    $sql->execute([
+        'module' => $module,
+        'action' => $action,
+        'description' => $description,
+        'register' => $user_id,
+    ]);
+}
 ?>

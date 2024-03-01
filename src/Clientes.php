@@ -7,7 +7,7 @@ session_start();
 if (!$pdo) {
     die("Error en la conexión a la base de datos: " . $pdo->errorInfo()[2]);
 }
-if (empty($_SESSION['booleano']&& $_SESSION['rol'] == 'cliente')) {
+if (empty($_SESSION['booleano']) && (empty($_SESSION['rol']) || $_SESSION['rol'] != 'cliente')) {
     header("Location: Login.php");
     exit();
 }
@@ -115,7 +115,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 </head>
 <body>
     <div class="container mt-5">
-        <form action="Clientes.php" method="post">
+        <form action="Clientes.php" method="post" enctype="multipart/form-data">
             <legend>Datos del cliente</legend>
             <div class="card">
                     <div class="card-header">
@@ -300,11 +300,11 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                         <div class="form-row">
                             <div class="form-group col-md-4">
                                 <label for="paisPj"> Pais (PJ):</label>
-                                <input type="text" class="form-control" id="paisPj" name="paisPj" required>
+                                <input type="text" class="form-control" id="paisPj" name="paisPJ" required>
                             </div>
                             <div class="form-group col-md-4">
                                 <label for="ciudadPj"> Ciudad (PJ):</label>
-                                <input type="text" class="form-control" id="ciudadPj" name="ciudadPj" required>
+                                <input type="text" class="form-control" id="ciudadPj" name="ciudadPJ" required>
                             </div>
                         </div>
                     </div>

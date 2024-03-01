@@ -24,6 +24,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
         // Verificar la contraseña
         if (password_verify($Contrasena, $row['contrasena'])) {
+            log_action($row['idregister'], 'autenticacion', 'login', NULL);
+
             // La contraseña es correcta, redirigir al usuario según su rol
             $_SESSION["booleano"] = true;
             $_SESSION["usuario"] = $row['usuario'];
