@@ -292,6 +292,315 @@
 
 
 
+            <div class="card mt-4">
+                    <div class="card-header">
+                        Información sobre Operaciones en Moneda Extranjera (PN o PJ)
+                    </div>
+                    <div class="card-body">
+                        <div class="form-row">
+                            <div class="form-group col-md-4">
+                                <label for="operacionInternacional">¿Por su actividad como persona natural o jurídica realiza operaciones internacionales?</label>
+                                <select id="operacionInternacional" class="form-control" name="operacionInternacional" required>
+                                    <option selected disabled value="">Selecciona...</option>
+                                    <option>Si</option>
+                                    <option>No</option>
+                                </select>
+                            </div>
+                            <div class="form-group col-md-4">
+                                <label for="operacionMoneda">¿Cuál(es) de las siguientes operaciones realiza en moneda extranjera:</label>
+                                <select id="operacionMoneda" class="form-control" name="operacionMoneda" required>
+                                    <option selected disabled value="">Selecciona...</option>
+                                    <option>Importacion</option>
+                                    <option>Exportacion</option>
+                                    <option>Pago de servicios</option>
+                                    <option>Prestamos</option>
+                                    <option>Inversiones</option>
+                                    <option>Otra</option>
+                                </select>
+                            </div>
+                            <div class="form-group col-md-4">
+                                <label for="otra"> Si su respuesta anterior fue (otra), especifique cual operacion hace?       </label>
+                                <input type="text" class="form-control" id="otra" name="otra" required>
+                            </div>
+                        </div>
+
+                        <div class="form-row">
+                            <div class="form-group col-md-8">
+                                <label for="cuentaMonedaExtranjera">¿Cómo persona natural o jurídica posee cuentas en moneda extranjera en países diferentes al domicilio de la empresa o persona natural?</label>
+                                <select id="cuentaMonedaExtranjera" class="form-control" name="cuentaMonedaExtranjera" required>
+                                    <option selected disabled value="">Selecciona...</option>
+                                    <option>Si</option>
+                                    <option>No</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group col-md-12">
+                                <h6>Si su respuesta anterior fue si, porfavor llena la siguente tabla</h6>
+                                <table x-data="table_kids" class="table table-striped">
+                                    <thead>
+                                        <tr>
+                                            <th>Tipo de producto 
+                                                    (Cta ahorros o corriente)
+                                            </th>
+                                            <th>Tipo de moneda</th>
+                                            <th>Nombre de la entidad</th>
+                                            <th>numero de cuenta</th>
+                                            <th>Pais</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <template x-for="row in length">
+                                            <tr x-bind:key="row">
+                                                <td><input type="text" class="form-control" x-on:input="updateData(row - 1, 'tipoProducto', $el.value)" required></td>
+                                                <td><input type="text" class="form-control" x-on:input="updateData(row - 1, 'tipoMoneda', $el.value)" required></td>
+                                                <td><input type="text" class="form-control" x-on:input="updateData(row - 1, 'nombreEntidad', $el.value)" required></td>
+                                                <td><input type="text" class="form-control" x-on:input="updateData(row - 1, 'numeroCuenta', $el.value)" required></td>
+                                                <td><input type="text" class="form-control" x-on:input="updateData(row - 1, 'pais', $el.value)" required></td>
+                                            </tr>
+                                        </template>
+                                    </tbody>
+                                    <tfoot>
+                                        <tr>
+                                            <td colspan="4">
+                                                <button type="button" class="btn btn-success" x-on:click="addRow">Añadir columna</button>
+                                                <button type="button" class="btn btn-danger" x-on:click="deleteRow">Eliminar columna</button>
+                                            </td>
+                                            <td>
+                                                <input type="hidden" name="tableKids" x-bind:value="JSON.stringify(data)">
+                                            </td>
+                                        </tr>
+                                    </tfoot>
+                                </table>
+
+                                <script>
+                                    document.addEventListener('alpine:init', () => {
+                                        Alpine.data('table_kids', () => ({
+                                            data: [{}],
+                                            length: 1,
+
+                                            addRow() {
+                                                this.length += 1;
+                                                this.data = [...this.data, {}];
+                                            },
+                                            deleteRow() {
+                                                if (this.length == 0) return;
+
+                                                this.length -= 1;
+                                                this.data = this.data.slice(0, this.length);
+                                            },
+
+                                            updateData(row, parameter, value) {
+                                                this.data[row][parameter] = value;
+                                            },
+                                        }));
+                                    });
+                                </script>
+                            </div>
+                        </div>
+                        
+                        <div class="form-row">    
+                            <div class="form-group col-md-8">
+                                <label for="activosVirtuales">¿Cómo persona natural o jurídica posee activos virtuales?</label>
+                                <select id="activosVirtuales" class="form-control" name="activosVirtuales" required>
+                                    <option selected disabled value="">Selecciona...</option>
+                                    <option>Si</option>
+                                    <option>No</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="form-row">
+                            <div class="form-group col-md-12">
+                                <h6>Si su respuesta anterior fue si, porfavor llena la siguente tabla</h6>
+                                <table x-data="table_kids" class="table table-striped">
+                                    <thead>
+                                        <tr>
+                                            <th>Tipo de producto 
+                                                    (Cta ahorros o corriente)
+                                            </th>
+                                            <th>Tipo de moneda</th>
+                                            <th>Nombre de la entidad</th>
+                                            <th>numero de cuenta</th>
+                                            <th>Pais</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <template x-for="row in length">
+                                            <tr x-bind:key="row">
+                                                <td><input type="text" class="form-control" x-on:input="updateData(row - 1, 'tipoProducto', $el.value)" required></td>
+                                                <td><input type="text" class="form-control" x-on:input="updateData(row - 1, 'tipoMoneda', $el.value)" required></td>
+                                                <td><input type="text" class="form-control" x-on:input="updateData(row - 1, 'nombreEntidad', $el.value)" required></td>
+                                                <td><input type="text" class="form-control" x-on:input="updateData(row - 1, 'numeroCuenta', $el.value)" required></td>
+                                                <td><input type="text" class="form-control" x-on:input="updateData(row - 1, 'pais', $el.value)" required></td>
+                                            </tr>
+                                        </template>
+                                    </tbody>
+                                    <tfoot>
+                                        <tr>
+                                            <td colspan="4">
+                                                <button type="button" class="btn btn-success" x-on:click="addRow">Añadir columna</button>
+                                                <button type="button" class="btn btn-danger" x-on:click="deleteRow">Eliminar columna</button>
+                                            </td>
+                                            <td>
+                                                <input type="hidden" name="tableKids" x-bind:value="JSON.stringify(data)">
+                                            </td>
+                                        </tr>
+                                    </tfoot>
+                                </table>
+
+                                <script>
+                                    document.addEventListener('alpine:init', () => {
+                                        Alpine.data('table_kids', () => ({
+                                            data: [{}],
+                                            length: 1,
+
+                                            addRow() {
+                                                this.length += 1;
+                                                this.data = [...this.data, {}];
+                                            },
+                                            deleteRow() {
+                                                if (this.length == 0) return;
+
+                                                this.length -= 1;
+                                                this.data = this.data.slice(0, this.length);
+                                            },
+
+                                            updateData(row, parameter, value) {
+                                                this.data[row][parameter] = value;
+                                            },
+                                        }));
+                                    });
+                                </script>
+                            </div>
+                        </div>
+                    </div>     
+            </div>
+
+            <div class="card mt-4">
+                <div class="card-header">
+                    INFORMACIÓN FINANCIERA PERSONA NATURAL O JURIDICA
+                </div>
+                <div class="card-body">
+                    <div class="form-row">
+                        <div class="form-group col-md-4">
+                            <label for="anio">Año (Ultimo año fiscal)</label>
+                            <input type="text" class="form-control" id="anio" name="anio" required>
+                        </div>
+                        <div class="form-group col-md-4">
+                            <label for="ingreso"> Ingreso totales anual</label>
+                            <input type="text" class="form-control" id="ingreso" name="ingreso" required>
+                        </div>
+                        <div class="form-group col-md-4">
+                            <label for="egresos"> Egresos totales anual</label>
+                            <input type="text" class="form-control" id="egresos" name="egresos" required>
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group col-md-4">
+                            <label for="valorActivos"> Valor activos</label>
+                            <input type="text" class="form-control" id="valorActivos" name="valorActivos" required>
+                        </div>
+                        <div class="form-group col-md-4">
+                            <label for="valorPasivos"> Valor pasivos(deudas)</label>
+                            <input type="text" class="form-control" id="valorPasivos" name="valorPasivos" required>
+                        </div>
+                        <div class="form-group col-md-4">
+                            <label for="utilidad"> Utilidad o perdida anual</label>
+                            <input type="text" class="form-control" id="utilidad" name="utilidad" required>
+                        </div>
+                    </div>
+                    
+                    <div class="form-row">
+                        <div class="form-group col-md-4">
+                            <label for="numeroEmpleados"> Numero de empleados</label>
+                            <input type="text" class="form-control" id="numeroEmpleados" name="numeroEmpleados" required>
+                        </div>
+                    </div>
+                </div>    
+            </div>
+
+            <div class="card mt-4">
+                    <div class="card-header">
+                        Identificacion de los beneficiarios finales
+                    </div>
+                    <div class="card-body">
+                        <div class="form-row">
+                            <div class="form-group col-md-12">
+                                <h7>Identifique las personas naturales que tienen una participación en la persona o estructura jurídica declarante igual o mayor al 5%</h7>
+                                <table x-data="table_kids" class="table table-striped">
+                                    <thead>
+                                        <tr>
+                                            <th>Nombres y apellidos(Completos) </th>
+                                            <th>Pais (Domicilio)</th>
+                                            <th>Nacionalidad</th>
+                                            <th>Tipo documento de Identificacion</th>
+                                            <th>Numero de identificacion</th>
+                                            <th>Participacion en % </th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <template x-for="row in length">
+                                            <tr x-bind:key="row">
+                                                <td><input type="text" class="form-control" x-on:input="updateData(row - 1, 'nombres', $el.value)" required></td>
+                                                <td><input type="text" class="form-control" x-on:input="updateData(row - 1, 'pais', $el.value)" required></td>
+                                                <td><input type="text" class="form-control" x-on:input="updateData(row - 1, 'nacionalidad', $el.value)" required></td>
+                                                <td>
+                                                    <select class="form-control" x-on:change="updateData(row - 1, 'tipoDocumento', $el.value)" required>
+                                                        <option value="" disabled selected>Selecciona...</option>
+                                                        <option value="TI">T.I</option>
+                                                        <option value="CC">C.C</option>
+                                                        <option value="NIT">NIT</option>
+                                                        <option value="CE">C.E</option>
+                                                        <option value="OTRO">OTRO</option>
+                                                    </select>
+                                                </td>
+                                                <td><input type="text" class="form-control" x-on:input="updateData(row - 1, 'numeroIdentificacion', $el.value)" required></td>
+                                                <td><input type="text" class="form-control" x-on:input="updateData(row - 1, 'participacion', $el.value)" required></td>
+                                            </tr>
+                                        </template>
+                                    </tbody>
+                                    <tfoot>
+                                        <tr>
+                                            <td colspan="4">
+                                                <button type="button" class="btn btn-success" x-on:click="addRow">Añadir columna</button>
+                                                <button type="button" class="btn btn-danger" x-on:click="deleteRow">Eliminar columna</button>
+                                            </td>
+                                            <td>
+                                                <input type="hidden" name="tableKids" x-bind:value="JSON.stringify(data)">
+                                            </td>
+                                        </tr>
+                                    </tfoot>
+                                </table>
+
+                                <script>
+                                    document.addEventListener('alpine:init', () => {
+                                        Alpine.data('table_kids', () => ({
+                                            data: [{}],
+                                            length: 1,
+
+                                            addRow() {
+                                                this.length += 1;
+                                                this.data = [...this.data, {}];
+                                            },
+                                            deleteRow() {
+                                                if (this.length == 0) return;
+
+                                                this.length -= 1;
+                                                this.data = this.data.slice(0, this.length);
+                                            },
+
+                                            updateData(row, parameter, value) {
+                                                this.data[row][parameter] = value;
+                                            },
+                                        }));
+                                    });
+                                </script>
+                            </div>
+                        </div>
+                    </div>
+            </div>
             <button type="submit" class="btn btn-primary">Enviar</button>
         </form>
     </div>

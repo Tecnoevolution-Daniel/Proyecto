@@ -458,21 +458,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                     <input type="date" class="form-control" id="fecha" name="fecha" required>
                 </div>
             </div>
-
-
-
-
-            <div class="form-row">
-                        <div class="form-group col-md-4">
-
-                        </div>
-                        <div class="form-group col-md-4">
-
-                        </div>
-                        <div class="form-group col-md-4">
-
-                        </div>
-                    </div>
             <button type="submit" class="btn btn-primary">Enviar</button>
         </form>
     </div>
