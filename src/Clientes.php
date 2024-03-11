@@ -87,7 +87,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $stmt->bindParam(':correoElectronico', $_POST['correoElectronico']);
         $stmt->bindParam(':numContacto', $_POST['numContacto']);
         $stmt->execute();
-
+/*
         // Insertar en la tabla `info_actividad_economica`
         $stmt = $pdo->prepare("INSERT INTO info_actividad_economica (id_cliente, codigo, lineaProductos, actividad, especialidad, operacionMoneda, resolucion) 
                                 VALUES (:id_cliente, :codigo, :lineaProductos, :actividad, :especialidad, :operacionMoneda, :resolucion)");
@@ -100,6 +100,82 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $stmt->bindParam(':resolucion', $_POST['resolucion']);
         $stmt->execute();
 
+
+        // Insertar datos en la tabla clientes_operaciones_monedaextranjera
+        $stmt = $pdo->prepare("INSERT INTO clientes_operaciones_monedaextranjera (id_cliente, operacionInternacional, operacionMonedas, otra) 
+                                    VALUES (:id_cliente, :operacionInternacional, :operacionMonedas, :otra)");
+        $stmt->bindParam(':id_cliente', $id_cliente);
+        $stmt->bindParam(':operacionInternacional', $_POST['operacionInternacional']);
+        $stmt->bindParam(':operacionMonedas', $_POST['operacionMonedas']);
+        $stmt->bindParam(':otra', $_POST['otra']);
+        $stmt->execute();
+*/
+        // Insertar datos en la tabla clientes_operaciones_monedaextranjera_cuentas
+        $stmt = $pdo->prepare("INSERT INTO clientes_operaciones_monedaextranjera_cuentas (id_cliente, cuentaMonedaExtranjera, tipoProducto, tipoMoneda, nombreEntidad, numeroCuenta, pais) 
+                                    VALUES (:id_cliente, :cuentaMonedaExtranjera, :tipoProducto, :tipoMoneda, :nombreEntidad, :numeroCuenta, :pais)");
+        
+        $stmt->bindParam(':id_cliente', $id_cliente);
+        $stmt->bindParam(':cuentaMonedaExtranjera', $_POST['cuentaMonedaExtranjera']);
+        foreach($_POST['tableKids'] as $row) {
+            $stmt->bindParam(':tipoProducto', $row['tipoProducto']);
+            $stmt->bindParam(':tipoMoneda', $row['tipoMoneda']);
+            $stmt->bindParam(':nombreEntidad', $row['nombreEntidad']);
+            $stmt->bindParam(':numeroCuenta', $row['numeroCuenta']);
+            $stmt->bindParam(':pais', $row['pais']);
+            $stmt->execute();
+}
+
+/*
+        // Insertar datos en la tabla clientes_operaciones_activos_virtuales
+        $stmt = $pdo->prepare("INSERT INTO clientes_operaciones_activos_virtuales (id_cliente, activosVirtuales, tipoProducto, tipoMoneda, nombreEntidad, numeroCuenta, pais) 
+                                 VALUES (:id_cliente, :activosVirtuales, :tipoProducto, :tipoMoneda, :nombreEntidad, :numeroCuenta, :pais)");
+        $stmt->bindParam(':id_cliente', $id_cliente); // Debes asignar un valor a $id_cliente
+        $stmt->bindParam(':activosVirtuales', $_POST['activosVirtuales']);
+        $stmt->bindParam(':tipoProducto', $_POST['tipoProducto']);
+        $stmt->bindParam(':tipoMoneda', $_POST['tipoMoneda']);
+        $stmt->bindParam(':nombreEntidad', $_POST['nombreEntidad']);
+        $stmt->bindParam(':numeroCuenta', $_POST['numeroCuenta']);
+        $stmt->bindParam(':pais', $_POST['pais']);
+        $stmt->execute();
+
+        $data = json_decode($_POST['tableKids'], true);
+        foreach($data as $row) {
+            $stmt->execute([
+                ':id_cliente' => $id_cliente,
+                ':tipoProducto' => $row['tipoProducto'],
+                ':tipoMoneda' => $row['tipoMoneda'],
+                ':nombreEntidad' => $row['nombreEntidad'],
+                ':numeroCuenta' => $row['numeroCuenta'],
+                ':pais' => $row['pais'],
+            ]);
+        }
+*/      
+        // Insertar datos en la tabla clientes_informacion_financiera_personal
+        $stmt = $pdo->prepare("INSERT INTO clientes_informacion_financiera_personal (id_cliente, anio, ingresos, egresos, valorActivos, valorPasivos, utilidad, numeroEmpleados) 
+                        VALUES (:id_cliente, :anio, :ingresos, :egresos, :valorActivos, :valorPasivos, :utilidad, :numeroEmpleados)");
+        $stmt->bindParam(':id_cliente', $id_cliente);                
+        $stmt->bindParam(':anio', $_POST['anio']);
+        $stmt->bindParam(':ingresos', $_POST['ingresos']);
+        $stmt->bindParam(':egresos', $_POST['egresos']);
+        $stmt->bindParam(':valorActivos', $_POST['valorActivos']);
+        $stmt->bindParam(':valorPasivos', $_POST['valorPasivos']);
+        $stmt->bindParam(':utilidad', $_POST['utilidad']);
+        $stmt->bindParam(':numeroEmpleados', $_POST['numeroEmpleados']);
+        $stmt->execute();
+/*
+        // Insertar datos en la tabla clientes_identificacion_beneficiarios
+        $stmt = $pdo->prepare("INSERT INTO clientes_identificacion_beneficiarios (id_cliente, nombres, pais, nacionalidad, tipoDocumento, numeroIdentificacion, participacion) 
+                                VALUES (:id_cliente, :nombres, :pais, :nacionalidad, :tipoDocumento, :numeroIdentificacion, :participacion)");
+        $stmt->bindParam(':id_cliente', $id_cliente);    
+        $stmt->bindParam(':nombres', $_POST['nombres']);
+        $stmt->bindParam(':pais', $_POST['pais']);
+        $stmt->bindParam(':nacionalidad', $_POST['nacionalidad']);
+        $stmt->bindParam(':tipoDocumento', $_POST['tipoDocumento']);
+        $stmt->bindParam(':numeroIdentificacion', $_POST['numeroIdentificacion']);
+        $stmt->bindParam(':participacion', $_POST['participacion']);
+        $stmt->execute();
+
+*/
         log_action($_SESSION['id'], 'clientes', 'insert', NULL);
 
 
@@ -463,8 +539,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                                 </select>
                             </div>
                             <div class="form-group col-md-4">
-                                <label for="operacionMoneda">¿Cuál(es) de las siguientes operaciones realiza en moneda extranjera:</label>
-                                <select id="operacionMoneda" class="form-control" name="operacionMoneda" required>
+                                <label for="operacionMonedas">¿Cuál(es) de las siguientes operaciones realiza en moneda extranjera:</label>
+                                <select id="operacionMonedas" class="form-control" name="operacionMonedas" required>
                                     <option selected disabled value="">Selecciona...</option>
                                     <option>Importacion</option>
                                     <option>Exportacion</option>
@@ -644,8 +720,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                             <input type="text" class="form-control" id="anio" name="anio" required>
                         </div>
                         <div class="form-group col-md-4">
-                            <label for="ingreso"> Ingreso totales anual</label>
-                            <input type="text" class="form-control" id="ingreso" name="ingreso" required>
+                            <label for="ingresos"> Ingreso totales anual</label>
+                            <input type="text" class="form-control" id="ingresos" name="ingresos" required>
                         </div>
                         <div class="form-group col-md-4">
                             <label for="egresos"> Egresos totales anual</label>

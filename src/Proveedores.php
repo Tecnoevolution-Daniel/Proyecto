@@ -5,12 +5,13 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Datos proveedor</title>
     <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <script src="//unpkg.com/alpinejs" defer></script>
 </head>
 <body>
     <div class="container mt-5">
         <form action="Proveedores.php" method="post">
             <legend>Datos del proveedor</legend>
-            <div class="card">
+            <div class="card mt-4">
                     <div class="card-header">
                         Información de los proveedores
                     </div>
@@ -159,6 +160,7 @@
                                 <input type="text" class="form-control" id="correoContacto" name="correoContacto" required>
                             </div>
                         </div>
+                    </div>
             </div>
             <div class="card mt-4">
                     <div class="card-header">
