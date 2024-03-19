@@ -92,13 +92,12 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
 
         // Insertar datos en la tabla proveedores operaciones moneda extranjera
-        $stmt = $pdo->prepare("INSERT INTO proveedores_operaciones_moneda_extranjera (id_proveedor, operacionInternacional, operacionMonedas, otra) 
-                                    VALUES (:id_proveedor, :operacionInternacional, :operacionMonedas, :otra)");
+        $stmt = $pdo->prepare("INSERT INTO proveedores_operaciones_moneda_extranjera (id_proveedor, operacionInternacional, operacionMonedas, otraMonedas) 
+                                    VALUES (:id_proveedor, :operacionInternacional, :operacionMonedas, :otraMonedas)");
         $stmt->bindParam(':id_proveedor', $id_proveedor);
         $stmt->bindParam(':operacionInternacional', $_POST['operacionInternacional']);
-        //Error en operacion monedas, (solo se selecciona el primer campo)
         $stmt->bindParam(':operacionMonedas', $_POST['operacionMonedas']);
-        $stmt->bindParam(':otra', $_POST['otra']);
+        $stmt->bindParam(':otraMonedas', $_POST['otraMonedas']);
         $stmt->execute();
 
 
@@ -456,10 +455,10 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                                 <label for="informacionTributaria">Especialidad:</label>
                                 <select id="informacionTributaria" class="form-control" name="informacionTributaria" required>
                                     <option selected disabled value="">Selecciona...</option>
-                                    <option>Gran contribuyente</option>
-                                    <option>Autorretenedor</option>
-                                    <option>Regimen comun</option>
-                                    <option>Regimen simplificado</option>
+                                    <option value="granContribuyente">Gran contribuyente</option>
+                                    <option value="autorretenedor">Autorretenedor</option>
+                                    <option value="regimenComun">Regimen comun</option>
+                                    <option value="regimenSimplificado">Regimen simplificado</option>
                                 </select>
                             </div>
                             <div class="form-group col-md-4">
@@ -498,8 +497,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                             </select>
                         </div>
                         <div class="form-group col-md-4">
-                            <label for="otra"> Si su respuesta anterior fue (otra), especifique cual operacion hace?       </label>
-                            <input type="text" class="form-control" id="otra" name="otra" required>
+                            <label for="otraMonedas"> Si su respuesta anterior fue (otra), especifique cual operacion hace?       </label>
+                            <input type="text" class="form-control" id="otraMonedas" name="otraMonedas" required>
                         </div>
                     </div>
 

@@ -102,13 +102,13 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
 
         // Insertar datos en la tabla clientes_operaciones_monedaextranjera
-        $stmt = $pdo->prepare("INSERT INTO clientes_operaciones_moneda_extranjera (id_cliente, operacionInternacional, operacionMonedas) 
-                                    VALUES (:id_cliente, :operacionInternacional, :operacionMonedas)");
+        $stmt = $pdo->prepare("INSERT INTO clientes_operaciones_moneda_extranjera (id_cliente, operacionInternacional, operacionMonedas, otrasMonedas) 
+                                    VALUES (:id_cliente, :operacionInternacional, :operacionMonedas, :otrasMonedas)");
         $stmt->bindParam(':id_cliente', $id_cliente);
         $stmt->bindParam(':operacionInternacional', $_POST['operacionInternacional']);
         //Error en operacion monedas, (solo se selecciona el primer campo)
         $stmt->bindParam(':operacionMonedas', $_POST['operacionMonedas']);
-        //$stmt->bindParam(':otrasMonedas', $_POST['otrasMonedas']);
+        $stmt->bindParam(':otrasMonedas', $_POST['otrasMonedas']);
         $stmt->execute();
 
         
@@ -613,7 +613,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                                                     <button type="button" class="btn btn-danger" x-on:click="deleteRow">Eliminar columna</button>
                                                 </td>
                                                 <td>
-                                                    <input type="text" name="tableKids1" x-bind:value="JSON.stringify(data)">
+                                                    <input type="hidden" name="tableKids1" x-bind:value="JSON.stringify(data)">
                                                 </td>
                                             </tr>
                                         </tfoot>
@@ -696,7 +696,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                                                     <button type="button" class="btn btn-danger" x-on:click="deleteRow">Eliminar columna</button>
                                                 </td>
                                                 <td>
-                                                    <input type="text" name="tableKids2" x-bind:value="JSON.stringify(data)">
+                                                    <input type="hidden" name="tableKids2" x-bind:value="JSON.stringify(data)">
                                                 </td>
                                             </tr>
                                         </tfoot>
