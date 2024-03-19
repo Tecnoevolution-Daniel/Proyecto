@@ -1,9 +1,187 @@
+<?php
+
+// Conexion a la base de datos
+include 'Connection.php';
+session_start();
+
+// Verificar la conexión a la base de datos
+if (!$pdo) {
+    die("Error en la conexión a la base de datos: " . $pdo->errorInfo()[2]);
+}
+
+if (empty($_SESSION['booleano']) && (empty($_SESSION['rol']) || $_SESSION['rol'] != 'proveedor')) {
+    header("Location: Login.php");
+    exit();
+}
+
+if ($_SERVER["REQUEST_METHOD"] == "POST") {
+    try{
+        // Obtener el ID generado automáticamente
+        $last_id = $_SESSION['id'];
+
+        // Insertar datos en la tabla 'proveedores'
+        $stmt = $pdo->prepare("INSERT INTO proveedores (id_register) VALUES (:id_register)");
+        $stmt->bindParam(':id_register', $last_id);
+        $stmt->execute();
+
+        // Obtener el ID del proveedor generado automáticamente
+        $id_proveedor = $pdo->lastInsertId();
+
+        // Insertar en la tabla `proveedores informacion empresa`
+        $stmt = $pdo->prepare("INSERT INTO proveedores_informacion_empresa (id_proveedor, tipoSolicitud, proceso) VALUES(:id_proveedor, :tipoSolicitud, :proceso)");
+        $stmt->bindParam(':id_proveedor', $id_proveedor);
+        $stmt->bindParam(':tipoSolicitud', $_POST['tipoSolicitud']);
+        $stmt->bindParam(':proceso', $_POST['proceso']);
+        $stmt->execute();
+       
+        // Insertar en la tabla `proveedores informacion basica`
+        $stmt = $pdo->prepare("INSERT INTO proveedores_informacion_basica (id_proveedor, tipoSociedad, tipoEmpresa, tamanoEmpresa, nombreRazonSocial, nit, nombreComercial, telefono, direccionDomicilio, ciudad, departamento, pais, fechaInicio, experiencia, paginaWeb, proposito, personaContacto, ocupacionContacto, celularContacto, correoContacto) 
+                                                    VALUES (:id_proveedor, :tipoSociedad, :tipoEmpresa, :tamanoEmpresa, :nombreRazonSocial, :nit, :nombreComercial, :telefono, :direccionDomicilio, :ciudad, :departamento, :pais, :fechaInicio, :experiencia, :paginaWeb, :proposito, :personaContacto, :ocupacionContacto, :celularContacto, :correoContacto)");
+        $stmt->bindParam(':id_proveedor', $id_proveedor);
+        $stmt->bindParam(':tipoSociedad', $_POST['tipoSociedad']);
+        $stmt->bindParam(':tipoEmpresa', $_POST['tipoEmpresa']);
+        $stmt->bindParam(':tamanoEmpresa', $_POST['tamanoEmpresa']);
+        $stmt->bindParam(':nombreRazonSocial', $_POST['nombreRazonSocial']);
+        $stmt->bindParam(':nit', $_POST['nit']);
+        $stmt->bindParam(':nombreComercial', $_POST['nombreComercial']);
+        $stmt->bindParam(':telefono', $_POST['telefono']);
+        $stmt->bindParam(':direccionDomicilio', $_POST['direccionDomicilio']);
+        $stmt->bindParam(':ciudad', $_POST['ciudad']);
+        $stmt->bindParam(':departamento', $_POST['departamento']);
+        $stmt->bindParam(':pais', $_POST['pais']);
+        $stmt->bindParam(':fechaInicio', $_POST['fechaInicio']);
+        $stmt->bindParam(':experiencia', $_POST['experiencia']);
+        $stmt->bindParam(':paginaWeb', $_POST['paginaWeb']);
+        $stmt->bindParam(':proposito', $_POST['proposito']);
+        $stmt->bindParam(':personaContacto', $_POST['personaContacto']);
+        $stmt->bindParam(':ocupacionContacto', $_POST['ocupacionContacto']);
+        $stmt->bindParam(':celularContacto', $_POST['celularContacto']);
+        $stmt->bindParam(':correoContacto', $_POST['correoContacto']);
+        $stmt->execute();
+
+        // Insertar en la tabla `proveedores informacion representante`  
+        $stmt = $pdo->prepare("INSERT INTO proveedores_informacion_representante (id_proveedor, nombresApellidos, numIdentificacion, tipoIdentificacion, fechaExpedicion, lugarExpedicion, lugarNacimientoCiudad, fechaNacimiento, paisNacimiento, profesionRepresentante, accionista, correoElectronico, numContacto) 
+                                VALUES (:id_proveedor, :nombresApellidos, :numIdentificacion, :tipoIdentificacion, :fechaExpedicion, :lugarExpedicion, :lugarNacimientoCiudad, :fechaNacimiento, :paisNacimiento, :profesionRepresentante, :accionista, :correoElectronico, :numContacto)");
+        $stmt->bindParam(':id_proveedor', $id_proveedor);
+        $stmt->bindParam(':nombresApellidos', $_POST['nombresApellidos']);
+        $stmt->bindParam(':numIdentificacion', $_POST['numIdentificacion']);
+        $stmt->bindParam(':tipoIdentificacion', $_POST['tipoIdentificacion']);
+        $stmt->bindParam(':fechaExpedicion', $_POST['fechaExpedicion']);
+        $stmt->bindParam(':lugarExpedicion', $_POST['lugarExpedicion']);
+        $stmt->bindParam(':lugarNacimientoCiudad', $_POST['lugarNacimientoCiudad']);
+        $stmt->bindParam(':fechaNacimiento', $_POST['fechaNacimiento']);
+        $stmt->bindParam(':paisNacimiento', $_POST['paisNacimiento']);
+        $stmt->bindParam(':profesionRepresentante', $_POST['profesionRepresentante']);
+        $stmt->bindParam(':accionista', $_POST['accionista']);
+        $stmt->bindParam(':correoElectronico', $_POST['correoElectronico']);
+        $stmt->bindParam(':numContacto', $_POST['numContacto']);
+        $stmt->execute();
+
+
+        // Insertar en la tabla `proveedores actividad economica`
+        $stmt = $pdo->prepare("INSERT INTO proveedores_actividad_economica (id_proveedor, codigo, lineaProductos, actividad, especialidad, informacionTributaria, resolucion) 
+                                VALUES (:id_proveedor, :codigo, :lineaProductos, :actividad, :especialidad, :informacionTributaria, :resolucion)");
+        $stmt->bindParam(':id_proveedor', $id_proveedor);
+        $stmt->bindParam(':codigo', $_POST['codigo']);
+        $stmt->bindParam(':lineaProductos', $_POST['lineaProductos']);
+        $stmt->bindParam(':actividad', $_POST['actividad']);
+        $stmt->bindParam(':especialidad', $_POST['especialidad']);
+        $stmt->bindParam(':informacionTributaria', $_POST['informacionTributaria']);
+        $stmt->bindParam(':resolucion', $_POST['resolucion']);
+        $stmt->execute();
+
+
+        // Insertar datos en la tabla proveedores operaciones moneda extranjera
+        $stmt = $pdo->prepare("INSERT INTO proveedores_operaciones_moneda_extranjera (id_proveedor, operacionInternacional, operacionMonedas, otra) 
+                                    VALUES (:id_proveedor, :operacionInternacional, :operacionMonedas, :otra)");
+        $stmt->bindParam(':id_proveedor', $id_proveedor);
+        $stmt->bindParam(':operacionInternacional', $_POST['operacionInternacional']);
+        //Error en operacion monedas, (solo se selecciona el primer campo)
+        $stmt->bindParam(':operacionMonedas', $_POST['operacionMonedas']);
+        $stmt->bindParam(':otra', $_POST['otra']);
+        $stmt->execute();
+
+
+        // Insertar datos en la tabla proveedores operaciones moneda extranjera cuentas
+        $stmt = $pdo->prepare("INSERT INTO proveedores_operaciones_moneda_extranjera_cuentas (id_proveedor, tipoProducto, tipoMoneda, nombreEntidad, numeroCuenta, pais) 
+                    VALUES (:id_proveedor, :tipoProducto, :tipoMoneda, :nombreEntidad, :numeroCuenta, :pais)");
+
+        $data = json_decode($_POST['tableKids1'], true);
+        foreach($data as $row) {
+            $stmt->execute([
+                ':id_proveedor' => $id_proveedor,
+                ':tipoProducto' => $row['tipoProducto'],
+                ':tipoMoneda' => $row['tipoMoneda'],
+                ':nombreEntidad' => $row['nombreEntidad'],
+                ':numeroCuenta' => $row['numeroCuenta'],
+                ':pais' => $row['pais'],
+                
+            ]);
+        }
+
+
+        // Insertar datos en la tabla proveedores operaciones activos virtuales
+        $stmt = $pdo->prepare("INSERT INTO proveedores_operaciones_activos_virtuales (id_proveedor, tipoProductos, tipoMonedas, nombreEntidades, numeroCuentas, paises) 
+                                 VALUES (:id_proveedor, :tipoProductos, :tipoMonedas, :nombreEntidades, :numeroCuentas, :paises)");
+  
+        $data = json_decode($_POST['tableKids2'], true);
+        foreach($data as $row) {
+            $stmt->execute([
+                ':id_proveedor' => $id_proveedor,
+                ':tipoProductos' => $row['tipoProductos'],
+                ':tipoMonedas' => $row['tipoMonedas'],
+                ':nombreEntidades' => $row['nombreEntidades'],
+                ':numeroCuentas' => $row['numeroCuentas'],
+                ':paises' => $row['paises'],
+            ]);
+        }
+
+
+        // Insertar datos en la tabla proveedores informacion financiera personal
+        $stmt = $pdo->prepare("INSERT INTO proveedores_informacion_financiera_personal (id_proveedor, anio, ingresos, egresos, valorActivos, valorPasivos, utilidad, numeroEmpleados) 
+                        VALUES (:id_proveedor, :anio, :ingresos, :egresos, :valorActivos, :valorPasivos, :utilidad, :numeroEmpleados)");
+        $stmt->bindParam(':id_proveedor', $id_proveedor);                
+        $stmt->bindParam(':anio', $_POST['anio']);
+        $stmt->bindParam(':ingresos', $_POST['ingresos']);
+        $stmt->bindParam(':egresos', $_POST['egresos']);
+        $stmt->bindParam(':valorActivos', $_POST['valorActivos']);
+        $stmt->bindParam(':valorPasivos', $_POST['valorPasivos']);
+        $stmt->bindParam(':utilidad', $_POST['utilidad']);
+        $stmt->bindParam(':numeroEmpleados', $_POST['numeroEmpleados']);
+        $stmt->execute();
+
+
+        // Insertar datos en la tabla proveedores identificacion beneficiarios
+        $stmt = $pdo->prepare("INSERT INTO proveedores_identificacion_beneficiarios (id_proveedor, nombres, paisBeneficiario, nacionalidadBeneficiario, tipoDocumento, numeroIdentificacion, participacion) 
+                        VALUES (:id_proveedor, :nombres, :paisBeneficiario, :nacionalidadBeneficiario, :tipoDocumento, :numeroIdentificacion, :participacion)");
+
+        $data = json_decode($_POST['tableKids'], true);
+        foreach($data as $row) {
+            $stmt->execute([
+                ':id_proveedor' => $id_proveedor,
+                ':nombres' => $row['nombres'],
+                ':paisBeneficiario' => $row['paisBeneficiario'],
+                ':nacionalidadBeneficiario' => $row['nacionalidadBeneficiario'],
+                ':tipoDocumento' => $row['tipoDocumento'],
+                ':numeroIdentificacion' => $row['numeroIdentificacion'],
+                ':participacion' => $row['participacion'],
+            ]);
+        }
+
+    }catch(PDOException $e){
+        log_action($_SESSION['id'], 'proveedores', 'insert:error', $e->getMessage());
+        die("Error al insertar datos: " . $e->getMessage());
+    }
+}
+
+?>
+
 <!DOCTYPE html>
 <html lang="es">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Datos proveedor</title>
+    <title>Datos proveedor - Usuario: <?= $_SESSION['usuario'] ?></title>
     <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
     <script src="//unpkg.com/alpinejs" defer></script>
 </head>
@@ -53,9 +231,9 @@
                                     <option value="unipersonal">Unipersonal</option>
                                     <option value="limitada">Limitada</option>
                                     <option value="colectiva">Colectiva</option>
-                                    <option value="economía_Mixta">Economía Mixta</option>
+                                    <option value="economiaMixta">Economía Mixta</option>
                                     <option value="enComandita">En Comandita</option>
-                                    <option value="anónima">Anónima</option>
+                                    <option value="anonima">Anónima</option>
                                     <option value="sas">SAS</option>
                                     <option value="fideicomisos">Fideicomisos</option>
                                 </select>
@@ -99,8 +277,8 @@
 
                         <div class="form-row">
                             <div class="form-group col-md-4">
-                                <label for="numeroCelular"> Telefono:</label>
-                                <input type="text" class="form-control" id="numeroCelular" name="numeroCelular" required>
+                                <label for="telefono"> Telefono:</label>
+                                <input type="text" class="form-control" id="telefono" name="telefono" required>
                             </div>
                             <div class="form-group col-md-4">
                                 <label for="direccionDomicilio"> Direccion domicilio principal:</label>
@@ -146,12 +324,12 @@
                                 <input type="text" class="form-control" id="personaContacto" name="personaContacto" required>
                             </div>
                             <div class="form-group col-md-4">
-                                <label for="cargoContacto"> Ocupacion de la persona de contacto</label>
-                                <input type="text" class="form-control" id="cargoContacto" name="cargoContacto" required>
+                                <label for="ocupacionContacto"> Ocupacion de la persona de contacto</label>
+                                <input type="text" class="form-control" id="ocupacionContacto" name="ocupacionContacto" required>
                             </div>
                             <div class="form-group col-md-4">
-                                <label for="telefonoContacto"> Celular persona de contacto:</label>
-                                <input type="text" class="form-control" id="telefonoContacto" name="telefonoContacto" required>
+                                <label for="celularContacto"> Celular persona de contacto:</label>
+                                <input type="text" class="form-control" id="celularContacto" name="celularContacto" required>
                             </div>
                         </div>
                         <div class="form-row">  
@@ -179,11 +357,11 @@
                             <div class="form-group col-md-4">
                                 <label for="tipoIdentificacion">Tipo:</label>
                                 <select id="tipoIdentificacion" class="form-control" name="tipoIdentificacion" required>
-                                    <option selected disabled value="">Selecciona...</option>
-                                    <option>Cedula de ciudadania</option>
-                                    <option>Cedula de extranjeria</option>
-                                    <option>Pasaporte</option>
-                                    <option>Otro</option>
+                                    <option value="" disabled selected>Selecciona...</option>
+                                    <option value="NIT">NIT</option>
+                                    <option value="CC">Cedula de ciudadania</option>
+                                    <option value="CE">Cedula de extranjeria</option>
+                                    <option value="PA">Pasaporte</option>
                                 </select>
                             </div>
                         </div>
@@ -213,8 +391,8 @@
                                 <input type="text" class="form-control" id="paisNacimiento" name="paisNacimiento" required>
                             </div>
                             <div class="form-group col-md-4">
-                                <label for="profesion">Profesion:</label>
-                                <input type="text" class="form-control" id="profesion" name="profesion" required>
+                                <label for="profesionRepresentante">profesion:</label>
+                                <input type="text" class="form-control" id="profesionRepresentante" name="profesionRepresentante" required>
                             </div>   
                         </div>
                         <div class="form-row">
@@ -290,56 +468,57 @@
                             </div>
                         </div>
                     </div>
-            </div>
-
-
+            </div>  
 
             <div class="card mt-4">
-                    <div class="card-header">
-                        Información sobre Operaciones en Moneda Extranjera (PN o PJ)
-                    </div>
-                    <div class="card-body">
-                        <div class="form-row">
-                            <div class="form-group col-md-4">
-                                <label for="operacionInternacional">¿Por su actividad como persona natural o jurídica realiza operaciones internacionales?</label>
-                                <select id="operacionInternacional" class="form-control" name="operacionInternacional" required>
-                                    <option selected disabled value="">Selecciona...</option>
-                                    <option>Si</option>
-                                    <option>No</option>
-                                </select>
-                            </div>
-                            <div class="form-group col-md-4">
-                                <label for="operacionMoneda">¿Cuál(es) de las siguientes operaciones realiza en moneda extranjera:</label>
-                                <select id="operacionMoneda" class="form-control" name="operacionMoneda" required>
-                                    <option selected disabled value="">Selecciona...</option>
-                                    <option>Importacion</option>
-                                    <option>Exportacion</option>
-                                    <option>Pago de servicios</option>
-                                    <option>Prestamos</option>
-                                    <option>Inversiones</option>
-                                    <option>Otra</option>
-                                </select>
-                            </div>
-                            <div class="form-group col-md-4">
-                                <label for="otra"> Si su respuesta anterior fue (otra), especifique cual operacion hace?       </label>
-                                <input type="text" class="form-control" id="otra" name="otra" required>
-                            </div>
+                <div class="card-header">
+                    Información sobre Operaciones en Moneda Extranjera (PN o PJ)
+                </div>
+                <div class="card-body">
+                    <div class="form-row">
+                        <div class="form-group col-md-4">
+                            <label for="operacionInternacional">¿Por su actividad como persona natural o jurídica realiza operaciones internacionales?</label>
+                            <select id="operacionInternacional" class="form-control" name="operacionInternacional" required>
+                                <option selected disabled value="">Selecciona...</option>
+                                <option>Si</option>
+                                <option>No</option>
+                            </select>
                         </div>
+                        <div class="form-group col-md-4">
+                            <label for="operacionMonedas">¿Cuál(es) de las siguientes operaciones realiza en moneda extranjera:</label>
+                                <select id="operacionMonedas" class="form-control" name="operacionMonedas" required>
+                                    <option selected disabled value="">Selecciona...</option>
+                                    <option value="Importacion">Importacion</option>
+                                    <option value="Exportacion">Exportacion</option>
+                                    <option value="Pago_servicios"> Pago de servicios</option>
+                                    <option value="Prestamos">Prestamos</option>
+                                    <option value="Inversiones">Inversiones</option>
+                                    <option value="Otra">Otra</option>
+                                </select>
+                            </select>
+                        </div>
+                        <div class="form-group col-md-4">
+                            <label for="otra"> Si su respuesta anterior fue (otra), especifique cual operacion hace?       </label>
+                            <input type="text" class="form-control" id="otra" name="otra" required>
+                        </div>
+                    </div>
 
+                    <div x-data="{ cuentaMonedaExtranjera: '' }">
                         <div class="form-row">
                             <div class="form-group col-md-8">
                                 <label for="cuentaMonedaExtranjera">¿Cómo persona natural o jurídica posee cuentas en moneda extranjera en países diferentes al domicilio de la empresa o persona natural?</label>
-                                <select id="cuentaMonedaExtranjera" class="form-control" name="cuentaMonedaExtranjera" required>
+                                <select id="cuentaMonedaExtranjera" class="form-control" name="cuentaMonedaExtranjera" required  x-model="cuentaMonedaExtranjera">
                                     <option selected disabled value="">Selecciona...</option>
-                                    <option>Si</option>
-                                    <option>No</option>
+                                    <option value="1">Si</option>
+                                    <option value="0">No</option>
                                 </select>
                             </div>
                         </div>
-                        <div class="form-row">
+                    
+                        <div class="form-row" id="tabla-vale1" x-show="cuentaMonedaExtranjera === '1'">
                             <div class="form-group col-md-12">
                                 <h6>Si su respuesta anterior fue si, porfavor llena la siguente tabla</h6>
-                                <table x-data="table_kids" class="table table-striped">
+                                <table x-data="table_kids1" class="table table-striped">
                                     <thead>
                                         <tr>
                                             <th>Tipo de producto 
@@ -354,11 +533,11 @@
                                     <tbody>
                                         <template x-for="row in length">
                                             <tr x-bind:key="row">
-                                                <td><input type="text" class="form-control" x-on:input="updateData(row - 1, 'tipoProducto', $el.value)" required></td>
-                                                <td><input type="text" class="form-control" x-on:input="updateData(row - 1, 'tipoMoneda', $el.value)" required></td>
-                                                <td><input type="text" class="form-control" x-on:input="updateData(row - 1, 'nombreEntidad', $el.value)" required></td>
-                                                <td><input type="text" class="form-control" x-on:input="updateData(row - 1, 'numeroCuenta', $el.value)" required></td>
-                                                <td><input type="text" class="form-control" x-on:input="updateData(row - 1, 'pais', $el.value)" required></td>
+                                                <td><input type="text" class="form-control" x-on:input="updateData(row - 1, 'tipoProducto', $el.value)"></td>
+                                                <td><input type="text" class="form-control" x-on:input="updateData(row - 1, 'tipoMoneda', $el.value)" ></td>
+                                                <td><input type="text" class="form-control" x-on:input="updateData(row - 1, 'nombreEntidad', $el.value)"></td>
+                                                <td><input type="text" class="form-control" x-on:input="updateData(row - 1, 'numeroCuenta', $el.value)"></td>
+                                                <td><input type="text" class="form-control" x-on:input="updateData(row - 1, 'pais', $el.value)"></td>
                                             </tr>
                                         </template>
                                     </tbody>
@@ -369,7 +548,7 @@
                                                 <button type="button" class="btn btn-danger" x-on:click="deleteRow">Eliminar columna</button>
                                             </td>
                                             <td>
-                                                <input type="hidden" name="tableKids" x-bind:value="JSON.stringify(data)">
+                                                <input type="hidden" name="tableKids1" x-bind:value="JSON.stringify(data)">
                                             </td>
                                         </tr>
                                     </tfoot>
@@ -377,9 +556,9 @@
 
                                 <script>
                                     document.addEventListener('alpine:init', () => {
-                                        Alpine.data('table_kids', () => ({
-                                            data: [{}],
-                                            length: 1,
+                                        Alpine.data('table_kids1', () => ({
+                                            data: [],
+                                            length: 0,
 
                                             addRow() {
                                                 this.length += 1;
@@ -393,29 +572,36 @@
                                             },
 
                                             updateData(row, parameter, value) {
+                                                if (this.data.length == 0) {
+                                                    this.addRow();
+                                                    this.length = 1;
+                                                }
                                                 this.data[row][parameter] = value;
                                             },
                                         }));
                                     });
+                
                                 </script>
                             </div>
                         </div>
-                        
-                        <div class="form-row">    
-                            <div class="form-group col-md-8">
-                                <label for="activosVirtuales">¿Cómo persona natural o jurídica posee activos virtuales?</label>
-                                <select id="activosVirtuales" class="form-control" name="activosVirtuales" required>
-                                    <option selected disabled value="">Selecciona...</option>
-                                    <option>Si</option>
-                                    <option>No</option>
-                                </select>
-                            </div>
-                        </div>
+                    </div>
 
-                        <div class="form-row">
+                    <div x-data="{ activosVirtuales: '' }">
+                            <div class="form-row">    
+                                <div class="form-group col-md-8">
+                                    <label for="activosVirtuales">¿Cómo persona natural o jurídica posee activos virtuales?</label>
+                                    <select id="activosVirtuales" class="form-control" name="activosVirtuales" x-model="activosVirtuales" required>
+                                        <option selected disabled value="">Selecciona...</option>
+                                        <option value="1">Si</option>
+                                        <option value="0">No</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                        <div class="form-row" id="tabla-vale" x-show="activosVirtuales === '1'">
                             <div class="form-group col-md-12">
                                 <h6>Si su respuesta anterior fue si, porfavor llena la siguente tabla</h6>
-                                <table x-data="table_kids" class="table table-striped">
+                                <table x-data="table_kids2" class="table table-striped">
                                     <thead>
                                         <tr>
                                             <th>Tipo de producto 
@@ -430,11 +616,11 @@
                                     <tbody>
                                         <template x-for="row in length">
                                             <tr x-bind:key="row">
-                                                <td><input type="text" class="form-control" x-on:input="updateData(row - 1, 'tipoProducto', $el.value)" required></td>
-                                                <td><input type="text" class="form-control" x-on:input="updateData(row - 1, 'tipoMoneda', $el.value)" required></td>
-                                                <td><input type="text" class="form-control" x-on:input="updateData(row - 1, 'nombreEntidad', $el.value)" required></td>
-                                                <td><input type="text" class="form-control" x-on:input="updateData(row - 1, 'numeroCuenta', $el.value)" required></td>
-                                                <td><input type="text" class="form-control" x-on:input="updateData(row - 1, 'pais', $el.value)" required></td>
+                                                <td><input type="text" class="form-control" x-on:input="updateData(row - 1, 'tipoProductos', $el.value)"></td>
+                                                <td><input type="text" class="form-control" x-on:input="updateData(row - 1, 'tipoMonedas', $el.value)"></td>
+                                                <td><input type="text" class="form-control" x-on:input="updateData(row - 1, 'nombreEntidades', $el.value)"></td>
+                                                <td><input type="text" class="form-control" x-on:input="updateData(row - 1, 'numeroCuentas', $el.value)"></td>
+                                                <td><input type="text" class="form-control" x-on:input="updateData(row - 1, 'paises', $el.value)"></td>
                                             </tr>
                                         </template>
                                     </tbody>
@@ -445,7 +631,7 @@
                                                 <button type="button" class="btn btn-danger" x-on:click="deleteRow">Eliminar columna</button>
                                             </td>
                                             <td>
-                                                <input type="hidden" name="tableKids" x-bind:value="JSON.stringify(data)">
+                                                <input type="hidden" name="tableKids2" x-bind:value="JSON.stringify(data)">
                                             </td>
                                         </tr>
                                     </tfoot>
@@ -453,9 +639,9 @@
 
                                 <script>
                                     document.addEventListener('alpine:init', () => {
-                                        Alpine.data('table_kids', () => ({
-                                            data: [{}],
-                                            length: 1,
+                                        Alpine.data('table_kids2', () => ({
+                                            data: [],
+                                            length: 0,
 
                                             addRow() {
                                                 this.length += 1;
@@ -469,14 +655,19 @@
                                             },
 
                                             updateData(row, parameter, value) {
+                                                if (this.data.length == 0) {
+                                                    this.addRow();
+                                                    this.length = 1;
+                                                }
                                                 this.data[row][parameter] = value;
                                             },
                                         }));
-                                    });
+                                    });                
                                 </script>
                             </div>
-                        </div>
-                    </div>     
+                        </div>    
+                    </div>
+                </div>     
             </div>
 
             <div class="card mt-4">
@@ -490,8 +681,8 @@
                             <input type="text" class="form-control" id="anio" name="anio" required>
                         </div>
                         <div class="form-group col-md-4">
-                            <label for="ingreso"> Ingreso totales anual</label>
-                            <input type="text" class="form-control" id="ingreso" name="ingreso" required>
+                            <label for="ingresos"> Ingreso totales anual</label>
+                            <input type="text" class="form-control" id="ingresos" name="ingresos" required>
                         </div>
                         <div class="form-group col-md-4">
                             <label for="egresos"> Egresos totales anual</label>
@@ -546,15 +737,15 @@
                                         <template x-for="row in length">
                                             <tr x-bind:key="row">
                                                 <td><input type="text" class="form-control" x-on:input="updateData(row - 1, 'nombres', $el.value)" required></td>
-                                                <td><input type="text" class="form-control" x-on:input="updateData(row - 1, 'pais', $el.value)" required></td>
-                                                <td><input type="text" class="form-control" x-on:input="updateData(row - 1, 'nacionalidad', $el.value)" required></td>
+                                                <td><input type="text" class="form-control" x-on:input="updateData(row - 1, 'paisBeneficiario', $el.value)" required></td>
+                                                <td><input type="text" class="form-control" x-on:input="updateData(row - 1, 'nacionalidadBeneficiario', $el.value)" required></td>
                                                 <td>
                                                     <select class="form-control" x-on:change="updateData(row - 1, 'tipoDocumento', $el.value)" required>
                                                         <option value="" disabled selected>Selecciona...</option>
-                                                        <option value="TI">T.I</option>
-                                                        <option value="CC">C.C</option>
+                                                        <option value="T.I">T.I</option>
+                                                        <option value="C.C">C.C</option>
                                                         <option value="NIT">NIT</option>
-                                                        <option value="CE">C.E</option>
+                                                        <option value="C.E">C.E</option>
                                                         <option value="OTRO">OTRO</option>
                                                     </select>
                                                 </td>
