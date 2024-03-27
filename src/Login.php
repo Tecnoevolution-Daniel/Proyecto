@@ -93,7 +93,7 @@ ob_end_flush();
                     </div>
                     <div class="card-footer">
                         <div class="text-center">
-                            <a href="Changes_password.php">¿Olvidó su contraseña?</a> | <a href="Register.php">Registrarse</a>
+                            <a href="cambiar_contrasena.php">¿Olvidó su contraseña?</a> | <a href="Register.php">Registrarse</a>
                         </div>
                     </div>
                 </div>
