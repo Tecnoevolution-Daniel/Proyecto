@@ -16,7 +16,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $Rol = $_POST['rol'];
 
      //Validacion donde no se repitan los correos
-     $query = "SELECT * FROM register WHERE correo = :correo";
+     $query = "SELECT * FROM usuarios WHERE correo = :correo";
      $stmt = $pdo->prepare($query);
      $stmt->execute(['correo' => $Correo]);
      if ($stmt->rowCount() > 0) {
@@ -44,7 +44,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
 
     // Agregar los datos a la Base de datos
-    $query = "INSERT INTO register(usuario, correo, contrasena, repita_contrasena, rol) VALUES(:usuario, :correo, :contrasena, :repita_contrasena, :rol)";
+    $query = "INSERT INTO usuarios(usuario, correo, contrasena, repita_contrasena, rol) VALUES(:usuario, :correo, :contrasena, :repita_contrasena, :rol)";
     $stmt = $pdo->prepare($query);
     $stmt->execute(['usuario' => $Usuario, 'correo' => $Correo, 'contrasena' => $hashedContrasena, 'repita_contrasena' => $RepitahashedContrasena, 'rol' => $Rol]);
 
@@ -72,56 +72,62 @@ ob_end_flush();
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
     <style>
         .form-container {
-            background-color: #d0d5db;
+            /*background-color: #d0d5db;*/
             padding: 20px;
             border-radius: 10px;
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
         }
     </style>
+
 </head>
 <body>
 
 <div class="container mt-5">
     <div class="row justify-content-center">
         <div class="col-md-6">
-            <div class="form-container">
-                <form action="Register.php" method="post">
-                    <div class="form-group">
-                        <label for="usuario">Usuario:</label>
-                        <input type="text" class="form-control" id="usuario" name="usuario" required>
-                    </div>
+            <div class="card">
+                <div class="card-header">
+                            <h3 >Registro</h3>
+                        </div>
+                <div class="form-container">
+                    <form action="Register.php" method="post">
+                        <div class="form-group" >
+                            <label for="usuario">Usuario</label>
+                            <input type="text" class="form-control" id="usuario" name="usuario" required>
+                        </div>
 
-                    <div class="form-group">
-                        <label for="correo">Correo:</label>
-                        <input type="email" class="form-control" id="correo" name="correo" required>
-                    </div>
+                        <div class="form-group">
+                            <label for="correo">Correo</label>
+                            <input type="email" class="form-control" id="correo" name="correo" required>
+                        </div>
 
-                    <div class="form-group">
-                        <label for="contrasena">Contraseña:</label>
-                        <input type="password" class="form-control" id="contrasena" name="contrasena" required>
-                    </div>
+                        <div class="form-group">
+                            <label for="contrasena">Contraseña</label>
+                            <input type="password" class="form-control" id="contrasena" name="contrasena" required>
+                        </div>
 
-                    <div class="form-group">
-                        <label for="repita_contrasena">Repita Contraseña:</label>
-                        <input type="password" class="form-control" id="repita_contrasena" name="repita_contrasena" required>
-                    </div>
+                        <div class="form-group">
+                            <label for="repita_contrasena">Repita Contraseña</label>
+                            <input type="password" class="form-control" id="repita_contrasena" name="repita_contrasena" required>
+                        </div>
 
-                    <div class="form-group">
-                        <label for="rol">Rol:</label>
-                        <select class="form-control" id="rol" name="rol" required>
-                            <option value="cliente">Cliente</option>
-                            <option value="proveedor">Proveedor</option>
-                            <option value="empleado">Empleado</option>
-                        </select>
-                    </div>
+                        <div class="form-group">
+                            <label for="rol">Rol</label>
+                            <select class="form-control" id="rol" name="rol" required>
+                                <option value="cliente">Cliente</option>
+                                <option value="proveedor">Proveedor</option>
+                                <option value="empleado">Empleado</option>
+                            </select>
+                        </div>
 
-                    <button type="submit" class="btn btn-primary">Registrarse</button>
-                     <!-- Botón para volver a la página de inicio de sesión -->
-                    <div class="mt-3 text-center">
-                        <a href="Login.php" class="btn btn-link">Volver a Inicio de Sesión</a>
-                    </div>
-                </form>
-            </div>
+                        <button type="submit" class="btn btn-primary">Registrarse</button>
+                        <!-- Botón para volver a la página de inicio de sesión -->
+                        <div class="mt-3 text-center">
+                            <a href="Login.php" class="btn btn-link">Volver a Inicio de Sesión</a>
+                        </div>
+                    </form>
+                </div>
+            </div>  
         </div>
     </div>
 </div>
